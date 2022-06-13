@@ -1,4 +1,3 @@
-import { WorksheetViewCommon } from 'exceljs'
 import { ITransaction } from '../types'
 
 export interface CellIdentifiers {
@@ -23,6 +22,7 @@ export interface DataGuide {
         name: keyof ITransaction
         number: number
         filters?: string[]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         func?: (val: any) => any
     }[]
 }

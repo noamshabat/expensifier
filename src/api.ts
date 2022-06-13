@@ -24,7 +24,7 @@ export async function getMappings() {
     return response.json() as Promise<Mapping[]> 
 }
 
-export async function setMappings(mappings: any[]) {
+export async function setMappings(mappings: unknown[]) {
     await fetch(path(APIs.Mappings), {
         method: 'POST',
         headers: [

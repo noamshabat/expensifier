@@ -1,5 +1,4 @@
 import './App.css';
-import { useState } from 'react'
 import { TransactionList } from './components/TransactionList';
 import { BarChart } from './components/BarChart';
 import { PieChart } from './components/PieChart';

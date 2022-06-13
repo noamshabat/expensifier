@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs';
-import { Workbook, Worksheet, WorksheetView } from 'exceljs'
 import { SheetIdentifier } from '../identifiers/type';
 import { readFile, WorkBook, WorkSheet } from 'xlsx'
 
@@ -38,7 +37,6 @@ export const loadFolder = async (path: string): Promise<WorkBook[]> => {
 }
 
 export const sheetMatch = (sheet: WorkSheet, identifier: SheetIdentifier) => {
-    const match = true
     if (!identifier.cells/* && !identifier.views */) {
         console.error('Empty identifier will never match')
     }
@@ -48,18 +46,6 @@ export const sheetMatch = (sheet: WorkSheet, identifier: SheetIdentifier) => {
         const mismatches = identifier.cells.filter((c) => cellValue(sheet, c.row, c.column) !== c.value).length
         if (mismatches > 0) return false
     }
-    // if (identifier.views) {
-    //     identifier.views.forEach((identifierView) => {
-    //         const found = sheet.views.find((sheetView) => {
-    //             const entries = Object.entries(identifierView)
-    //             for (let i = 0 ; i < entries.length ; i++) {
-    //                 const [key, value] = entries[i]
-    //                 if (sheetView[key as keyof WorksheetView] !== value) return false 
-    //             }
-    //             return true
-    //         })
-    //         if (!found) return false
-    //     })
-    // }
+
     return true
 }

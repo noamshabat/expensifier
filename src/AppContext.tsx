@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react"
 import * as API from "./api"
 import { Mapping, Transaction, TransactionType, UNDEFINED_CATEGORY, Views } from "./types"
 
-type FiltersDesc = { [key in keyof Partial<Transaction>]: any[] }
+type FiltersDesc = { [key in keyof Partial<Transaction>]: unknown[] }
 
 interface AppContextProps {
     transactions: Transaction[]
@@ -17,14 +17,14 @@ interface AppContextProps {
     typeNames: string[]
     filters: FiltersDesc,
     view: Views,
-    setMappings: (mappings: any[]) => void
+    setMappings: (mappings: Mapping[]) => void
     setFilters: (desc: FiltersDesc) => void
     setView: (view: Views) => void
 }
 
-let _setMappings = (mappings: any[]) => {}
-let _setFilters = (desc: FiltersDesc) => {}
-let _setView = (view: Views) => {}
+let _setMappings = (_mappings: Mapping[]) => { null }
+let _setFilters = (_desc: FiltersDesc) => { null }
+let _setView = (_view: Views) => { null }
 
 const initialContext: AppContextProps = {
     transactions: [],
@@ -38,13 +38,13 @@ const initialContext: AppContextProps = {
     filters: {},
     view: Views.List,
     setView: (view: Views) : void => { _setView(view) },
-    setMappings: (mappings: any[]): void => { _setMappings(mappings) },
+    setMappings: (mappings: Mapping[]): void => { _setMappings(mappings) },
     setFilters: (desc: FiltersDesc): void => { _setFilters(desc) },
 }
 
 const Context = React.createContext(initialContext)
 
-export const AppContext: React.FC<React.PropsWithChildren<{}>> = (props) => {
+export const AppContext: React.FC<React.PropsWithChildren<unknown>> = (props) => {
     const [originalTransactions, setOriginalTransactions] = useState<Transaction[]>([])
     const [contextValue, setContextValueInner] = useState(initialContext)
     const [contextHistory, setContextHistory] = useState<AppContextProps[]>([initialContext])
@@ -104,7 +104,7 @@ export const AppContext: React.FC<React.PropsWithChildren<{}>> = (props) => {
     }, [])
 
     useEffect(() => {
-        _setMappings = (mappings: any[]) => {
+        _setMappings = (mappings: Mapping[]) => {
             setContextValue({
                 ...contextValue,
                 mappings

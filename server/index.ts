@@ -39,7 +39,7 @@ async function run() {
   verifyEnv()
   // start the web server.
   await initServer()
-  processFolder('/home/noam/dev1/expensifier-data/')
+  processFolder('./data/')
 }
 
 run()

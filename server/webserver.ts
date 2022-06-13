@@ -4,6 +4,7 @@ import { log } from './logger'
 import { store } from './store/store'
 import cors from 'cors'
 import { getMappings, setMappings } from './config/mappings'
+import { ServiceException } from './exceptions/ServiceException'
 
 let server:Server
 
@@ -54,7 +55,8 @@ function expressLogger(req:Request, res:Response, next:NextFunction) {
   const send = res.send
 
   // create a new send function that logs the response.
-  res.send = function(body:any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  res.send = function(body: any) {
     // log(`Path:'${req.path}' response:`, body)
     return send.call(this, body)
   }
@@ -67,8 +69,8 @@ function expressLogger(req:Request, res:Response, next:NextFunction) {
  * 
  * All arguments are standard express error middleware arguments.
  */
-async function errorMiddleware(err:any, req:Request, res:Response, next:NextFunction) {
-	if (err.serviceException) {
+async function errorMiddleware(err: ServiceException|Error, req: Request, res: Response) {
+	if (err instanceof ServiceException && err.serviceException) {
 		res.status(err.code).send(err.message)
 	} else {
 		const msg = JSON.stringify(err)
@@ -87,7 +89,7 @@ export function initServer() {
   app.use(express.json());
   app.use(expressLogger)
   app.use(cors({
-    origin: 'http://192.168.6.128:3000',
+    origin: 'http://localhost:3000',
   }))
 	initRoutes(app)
 	app.use(errorMiddleware)
@@ -108,7 +110,7 @@ export async function stopServer() {
     log('Web server shutting down')
 		await new Promise((res) => {
       try {
-        server!.close(res)
+        server && server.close(res)
       } catch(err) {
         log('Error while shutting down', err)
         process.exit(1)

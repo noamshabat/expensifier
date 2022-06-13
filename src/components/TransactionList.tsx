@@ -23,7 +23,9 @@ function TransactionRow({ transaction }: { transaction: Transaction}) {
     const [newRegex, setNewRegex] = React.useState<string>()
 
     const setNewCategory = () => {
-        setMappings([...mappings, { categoryName: newCategoryName, regex: newRegex}])
+        if (newCategoryName && newRegex) {
+            setMappings([...mappings, { categoryName: newCategoryName, regex: newRegex}])
+        }
     }
 
     return (

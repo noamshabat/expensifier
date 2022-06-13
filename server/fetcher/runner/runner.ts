@@ -1,7 +1,6 @@
 import { cellValue, loadFolder, sheetMatch } from '../excel/utils'
-import { Worksheet } from 'exceljs'
 import { DataGuide, SheetIdentifier } from '../identifiers/type'
-import { ITransaction, TransactionType } from '../types'
+import { ITransaction, TransactionOrigins, TransactionType } from '../types'
 import { store } from '../../store/store'
 import { WorkSheet } from 'xlsx'
 
@@ -15,17 +14,16 @@ export function Runner() {
 
         let rowIndex = startRow
         while (cellValue(sheet, rowIndex, guide.endRow.column) !== guide.endRow.value) {
-            const entry: any = {}
+            const entry: Partial<ITransaction> = {}
             let skip = false
             
             guide.columns.forEach((c) => {
-                // entry[c.name] = sheet.getCell(rowIndex, c.number).value
                 entry[c.name] = cellValue(sheet, rowIndex, c.number)
-                if (c.func) entry[c.name] = c.func(entry[c.name]) 
-                if (c.filters && c.filters.includes(entry[c.name])) skip = true
+                if (c.func) entry[c.name] = c.func(entry[c.name] as string|number) 
+                if (c.filters && c.filters.includes(entry[c.name] as string)) skip = true
             })
-            entry.origin = guide.name
-            entry.type = entry.amount > 0 ? TransactionType.Income : TransactionType.Expense
+            entry.origin = guide.name as TransactionOrigins
+            entry.type = entry.amount && entry.amount > 0 ? TransactionType.Income : TransactionType.Expense
             if (!skip) entries.push(entry as ITransaction)
             
             rowIndex++
