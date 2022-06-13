@@ -6,5 +6,5 @@ export function getMappings() {
 }
 
 export function setMappings(data: any) {
-    writeFileSync(`${__dirname}/data/mappings.json`, JSON.stringify(data))
+    writeFileSync(`${__dirname}/data/mappings.json`, JSON.stringify(data,null,'\t'))
 }

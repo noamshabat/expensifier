@@ -18,10 +18,11 @@ const DBCheckingAccountDatumGuides: DataGuide = {
     name: CHECKING_ACCOUNT,
     startRow: 10,
     columns: [
-        { name: 'date', number: 1, func: (val) => moment(val, 'DD/MM/YYYY').toISOString() },
-        { name: 'description', number: 3, filters: ['קניית ני"ע'], },
-        { name: 'amount', number: 4},
+        { name: 'date', number: 1, func: (val) => moment(val, 'MM/DD/YYYY').format('DD/MM/YYYY') },
+        { name: 'description', number: 3, filters: [] },
+        { name: 'amount', number: 4, func: (val: string) => parseFloat(val.replace(',','')) },
     ],
+    endRow: { column: 1, value: '' }
 }
 
 const DBCreditCardIdentifier: SheetIdentifier = {
@@ -37,10 +38,11 @@ const DBCreditCardDataGuide: DataGuide = {
     name: CREDIT_CARD,
     startRow: 14,
     columns: [
-        { name: 'date', number: 8 , func: (val) => moment(val, 'DD/MM/YYYY').toISOString()},
-        { name: 'description', number: 2, filters: ['קניית ני"ע'], },
+        { name: 'date', number: 8 , func: (val) => moment(val, 'DD/MM/YYYY').format('DD/MM/YYYY') },
+        { name: 'description', number: 2, filters: [], },
         { name: 'amount', number: 9, func: (val) => val * -1 },
-    ]
+    ],
+    endRow: { column: 2, value: '' }
 }
 
 export function RegisterDiscountBankCheckingAccount(runner: IRunner) {

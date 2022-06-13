@@ -23,7 +23,6 @@ function TransactionRow({ transaction }: { transaction: Transaction}) {
     const [newRegex, setNewRegex] = React.useState<string>()
 
     const setNewCategory = () => {
-        debugger
         setMappings([...mappings, { categoryName: newCategoryName, regex: newRegex}])
     }
 
@@ -40,6 +39,7 @@ function TransactionRow({ transaction }: { transaction: Transaction}) {
                 </IconButton>
             </TableCell>
             <TableCell align="left">{transaction.category}</TableCell>
+            <TableCell align="right">{transaction.origin}</TableCell>
             <TableCell align="right">{transaction.description}</TableCell>
             <TableCell align="right">{transaction.amount}</TableCell>
             <TableCell align="right">{transaction.date}</TableCell>
@@ -71,6 +71,7 @@ export function TransactionList() {
                     <TableRow>
                         <TableCell />
                         <TableCell align="left">Category</TableCell>
+                        <TableCell align="right">Origin</TableCell>
                         <TableCell align="right">Description</TableCell>
                         <TableCell align="right">Amount</TableCell>
                         <TableCell align="right">Date</TableCell>

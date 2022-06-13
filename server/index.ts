@@ -12,6 +12,16 @@ Graceful.on('exit', async () => {
   await stopServer()
 });
 
+process.on('unhandledRejection', error => {
+  // Will print "unhandledRejection err is not defined"
+  console.log('unhandledRejection', error);
+});
+
+process.on('uncaughtException', error => {
+  // Will print "unhandledRejection err is not defined"
+  console.log('uncaughtException', error);
+});
+
 // Makes sure the required environment variables are defined.
 function verifyEnv() {
   ['REACT_APP_SERVER_PORT'].forEach((envVar) => {

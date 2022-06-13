@@ -1,3 +1,7 @@
+export enum TransactionType {
+    Expense='Expense',
+    Income='Income',
+}
 
 export type Transaction = {
     description: string
@@ -5,7 +9,8 @@ export type Transaction = {
     amount: number
     origin: string
     category?: string
-    month: number
+    month: string
+    type: TransactionType
 }
 
 export type Mapping = {
@@ -13,6 +18,13 @@ export type Mapping = {
     regex: string
 }
 
+export const enum Views {
+    List='List',
+    Bar='Bar',
+    CategoryPie='Category Pie'
+}
+  
+  
 export const UNDEFINED_CATEGORY = 'undefined'
 
 export type Filterable = string|number

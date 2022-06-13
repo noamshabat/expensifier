@@ -11,14 +11,14 @@ export interface CellIdentifiers {
 export interface SheetIdentifier {
     name: string
     cells?: CellIdentifiers[]
-    views?: Partial<WorksheetViewCommon>[]
+    // views?: Partial<WorksheetViewCommon>[]
 }
 
 
 export interface DataGuide {
     name: string
     startRow: number
-    endRow?: number
+    endRow: { column: number, value: string },
     columns: {
         name: keyof ITransaction
         number: number
