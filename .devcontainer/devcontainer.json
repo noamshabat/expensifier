@@ -1,11 +1,9 @@
 {
   "build": { "dockerfile": "Dockerfile" },
   "extensions": [
-	"dbaeumer.vscode-eslint",
-	"ms-vscode.vscode-typescript-tslint-plugin",
-	"eamodio.gitlens",
-	"ms-azuretools.vscode-docker",
-	"GraphQL.vscode-graphql"
-],
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "ms-azuretools.vscode-docker"
+  ],
   "containerUser": "node"
 }
