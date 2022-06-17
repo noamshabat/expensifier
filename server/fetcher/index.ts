@@ -9,11 +9,5 @@ RegisterCalCreditCard(runner)
 RegisterIsracardCreditCard(runner)
 
 export async function processFolder(folder: string) {
-    try {
-        await runner.run(folder)
-    } catch(err) {
-        console.error(err)
-        throw err
-    }
-    
+    await runner.run(folder)
 }

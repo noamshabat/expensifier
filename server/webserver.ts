@@ -1,12 +1,16 @@
 import express, { Request, Response, Express, NextFunction } from 'express'
 import { Server } from 'http'
 import { log } from './logger'
-import { store } from './store/store'
+import store from './store/store'
 import cors from 'cors'
-import { getMappings, setMappings } from './config/mappings'
 import { ServiceException } from './exceptions/ServiceException'
+import { ENV } from './_env'
+import { Mapper } from './mapper/mappings'
 
 let server:Server
+
+// TODO: change to ioc
+const mapper = new Mapper()
 
 /**
  * Initializes all app routes
@@ -25,16 +29,16 @@ function initRoutes(app:Express) {
   })
 
   app.get('/transactions', (req: Request, res: Response) => {
-    res.status(200).send(store.records)
+    res.status(200).send(store.allRecords())
   })
 
   app.get('/mappings', (req: Request, res: Response) => {
-    res.status(200).json(getMappings())
+    res.status(200).json(mapper.getMappings())
   })
 
   app.post('/mappings', (req: Request, res: Response) => {
     console.log(req.body.mappings)
-    setMappings(req.body.mappings)
+    mapper.setMappings(req.body.mappings)
     res.status(200).send('ok')
   })
 
@@ -84,7 +88,7 @@ async function errorMiddleware(err: ServiceException|Error, req: Request, res: R
  */
 export function initServer() {
   const app = express()
-	const port = process.env.REACT_APP_SERVER_PORT
+	const port = ENV.SERVER_PORT
 
   app.use(express.json());
   app.use(expressLogger)

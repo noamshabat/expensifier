@@ -1,7 +1,7 @@
 import { cellValue, loadFolder, sheetMatch } from '../excel/utils'
 import { DataGuide, SheetIdentifier } from '../identifiers/type'
 import { ITransaction, TransactionOrigins, TransactionType } from '../types'
-import { store } from '../../store/store'
+import store from '../../store/store'
 import { WorkSheet } from 'xlsx'
 
 export function Runner() {
@@ -27,16 +27,13 @@ export function Runner() {
             if (!skip) entries.push(entry as ITransaction)
             
             rowIndex++
-        }
-        const toPush = entries.filter((e) => {
-            if (typeof e.amount !== 'number' || typeof e.description !== 'string') {
-                console.error('Error entry', e)
-                return false
+
+            if (typeof entry.amount !== 'number' || typeof entry.description !== 'string') {
+                console.error('Error entry', entry)
+                continue
             }
-            return true
-        })
-        store.records.push(...toPush)
-        console.log('entries', toPush.length)
+            store.addTransaction(entry as ITransaction)
+        }
     }
 
     const process = (sheet: WorkSheet) => {

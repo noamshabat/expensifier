@@ -3,6 +3,7 @@
   "include": ["./**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"],
   "compilerOptions": {
+    "experimentalDecorators": true,
     "lib": ["dom", "ES7"],
     "outDir": "dist",
     "downlevelIteration": true

@@ -1,7 +1,16 @@
 import { ITransaction } from "../fetcher/types"
 
-export const store = {
-    records: []
+const store = {
+    transactions: []
 } as {
-    records: ITransaction[]
+    transactions: ITransaction[]
 }
+
+const api = {
+    addTransaction: (t: ITransaction) => {
+        store.transactions.push(t)
+    },
+    allRecords: () => store.transactions
+}
+
+export default api

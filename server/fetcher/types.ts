@@ -16,9 +16,4 @@ export interface ITransaction {
     origin: TransactionOrigins
 }
 
-export type Mapping = {
-    categoryName: string
-    regex: string
-}
-
 export {}
