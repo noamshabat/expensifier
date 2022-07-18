@@ -3,17 +3,22 @@ export enum TransactionType {
     Income='Income',
 }
 
-export enum TransactionOrigins {
+export enum TransactionOrigin {
     DiscountBankCreditCard='DiscountBankCreditCard',
     DiscountBankChecking='DiscountBankChecking',
 }
 
-export interface ITransaction {
+export interface IRawTransaction {
     type: TransactionType
-    description: string,
+    description: string
     amount: number
-    date: Date
-    origin: TransactionOrigins
+    timestamp: number
+    month: string
+    origin: TransactionOrigin
+}
+
+export interface ITransaction extends IRawTransaction {
+    category: string
 }
 
 export {}

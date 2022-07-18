@@ -1,9 +1,11 @@
 import _env from "./_env";
 import { Mapping, Transaction } from './types'
+import { Facets } from "./context/FacetsContext";
 
 const enum APIs {
     Transactions='transactions',
-    Mappings='mappings'
+    Mappings='mappings',
+    Facets='facets',
 }
 
 function path(api: APIs) {
@@ -24,12 +26,19 @@ export async function getMappings() {
     return response.json() as Promise<Mapping[]> 
 }
 
-export async function setMappings(mappings: unknown[]) {
+export async function addMapping(mapping: Mapping) {
     await fetch(path(APIs.Mappings), {
         method: 'POST',
         headers: [
             ['Content-Type', 'application/json'],
         ],
-        body: JSON.stringify({ mappings }),
+        body: JSON.stringify(mapping),
     })
+}
+
+export async function getFacets() {
+    const response =await fetch(path(APIs.Facets), {
+        method: 'GET',
+    })
+    return response.json() as Promise<Facets>
 }

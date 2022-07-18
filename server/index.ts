@@ -1,27 +1,21 @@
-import { ENV } from './_env' // Load environment vars before anything.
-import { log } from './logger'
-import { initServer, stopServer } from './webserver'
-import Graceful from 'node-graceful';
-import { processFolder } from './fetcher';
+import { Container } from "inversify";
+import { Environment } from "./environment/environment";
+import { Runner } from "./fetcher/runner/runner";
+import { Logger } from "./logger/logger";
+import { Mapper } from "./mapper/mappings";
+import { Server } from "./server";
+import { Store } from "./store/store";
+import { TYPES } from "./types";
+import { WebServer } from "./webserver/webserver";
 
-// Shutdown gracefully on any unhandled exception, rejection or signal.
-Graceful.captureExceptions = true;
-Graceful.captureRejections = true;
-Graceful.on('exit', async (signal: string, details?: object) => {
-  log('---- Graceful exit called ----')
-  log('\tSignal: \t', signal)
-  details && log('\tDetails: \t', details)
-  log('------------------------------')
-  // stops the webserver
-  await stopServer()
-});
+export const container = new Container()
+container.bind(TYPES.IServer).to(Server).inSingletonScope()
+container.bind(TYPES.IEnvironment).to(Environment).inSingletonScope()
+container.bind(TYPES.ILogger).to(Logger).inSingletonScope()
+container.bind(TYPES.IMapper).to(Mapper).inSingletonScope()
+container.bind(TYPES.IStore).to(Store).inSingletonScope()
+container.bind(TYPES.IWebServer).to(WebServer).inSingletonScope()
+container.bind(TYPES.IRunner).to(Runner).inSingletonScope()
 
-// starts the service.
-async function run() {
-  log('Starting service')
-  // start the web server.
-  await initServer()
-  processFolder(ENV.DATA_FOLDER)
-}
-
-run()
+// this starts the app
+container.get(TYPES.IServer)

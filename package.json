@@ -29,7 +29,7 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.8/xlsx-0.18.8.tgz"
   },
   "scripts": {
-    "server": "nodemon --ignore ./server/config/data --exec npx ts-node -- ./server/index.ts",
+    "server": "nodemon --ignore ./server/mapper/data --exec npx ts-node -- ./server/index.ts",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

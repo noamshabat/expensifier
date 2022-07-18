@@ -15,16 +15,17 @@ import Button from '@mui/material/Button'
 import { useAppContext } from '../AppContext';
 import { TextField } from '@mui/material';
 import { Transaction } from '../types'
+import { useMappings } from '../context/MappingsContext';
 
 function TransactionRow({ transaction }: { transaction: Transaction}) {
     const [open, setOpen] = React.useState(false)
-    const { mappings, setMappings } = useAppContext()
+    const { setMapping } = useMappings()
     const [newCategoryName, setNewCategoryName] = React.useState<string>()
     const [newRegex, setNewRegex] = React.useState<string>()
 
     const setNewCategory = () => {
         if (newCategoryName && newRegex) {
-            setMappings([...mappings, { categoryName: newCategoryName, regex: newRegex}])
+            setMapping({ categoryName: newCategoryName, regex: newRegex})
         }
     }
 

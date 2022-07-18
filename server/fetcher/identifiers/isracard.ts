@@ -29,9 +29,9 @@ const IsracardCreditCardDatumGuides: DataGuide = {
     name: ISRACARD_CREDIT_CARD,
     startRow: 7,
     columns: [
-        { name: 'date', number: 1, func: (val) => moment(val, 'DD/MM/YYYY').format('DD/MM/YYYY') },
-        { name: 'description', number: 2, filters: [], },
-        { name: 'amount', number: 5, func: (val) => val * -1},
+        { name: 'timestamp', number: 1, valueGetter: (val) => moment(val, 'DD/MM/YYYY').valueOf() },
+        { name: 'description', number: 2 },
+        { name: 'amount', number: 5, valueGetter: (val) => val * -1},
     ],
     endRow: { column: 2, value: 'סך חיוב בש"ח:' },
 }

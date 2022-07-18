@@ -18,9 +18,9 @@ const DBCheckingAccountDatumGuides: DataGuide = {
     name: CHECKING_ACCOUNT,
     startRow: 10,
     columns: [
-        { name: 'date', number: 1, func: (val) => moment(val, 'MM/DD/YYYY').format('DD/MM/YYYY') },
-        { name: 'description', number: 3, filters: [] },
-        { name: 'amount', number: 4, func: (val: string) => parseFloat(val.replace(',','')) },
+        { name: 'timestamp', number: 1, valueGetter: (val) => moment(val, 'MM/DD/YYYY').valueOf() },
+        { name: 'description', number: 3 },
+        { name: 'amount', number: 4, valueGetter: (val: string) => parseFloat(val.replace(',','')) },
     ],
     endRow: { column: 1, value: '' }
 }
@@ -38,11 +38,16 @@ const DBCreditCardDataGuide: DataGuide = {
     name: CREDIT_CARD,
     startRow: 14,
     columns: [
-        { name: 'date', number: 8 , func: (val) => moment(val, 'DD/MM/YYYY').format('DD/MM/YYYY') },
-        { name: 'description', number: 2, filters: [], },
-        { name: 'amount', number: 9, func: (val) => val * -1 },
+        { name: 'timestamp', number: 8 , valueGetter: (val) => moment(val, 'DD/MM/YYYY').valueOf() },
+        { name: 'description', number: 2 },
+        { name: 'amount', number: 9, valueGetter: (val) => val * -1 },
     ],
-    endRow: { column: 2, value: '' }
+    endRow: { column: 2, value: '' },
+    monthGetter: (timestamp: number, format: string) => {
+        console.log('timestamp', timestamp)
+        console.log('moment.unix', moment.unix(timestamp).toISOString())
+        return moment.unix(timestamp / 1000).subtract(1, 'month').format(format)
+    }
 }
 
 export function RegisterDiscountBankCheckingAccount(runner: IRunner) {

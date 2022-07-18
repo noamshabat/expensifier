@@ -1,4 +1,4 @@
-import { ITransaction } from '../types'
+import { IRawTransaction } from '../types'
 
 export interface CellIdentifiers {
     row: number
@@ -19,10 +19,10 @@ export interface DataGuide {
     startRow: number
     endRow: { column: number, value: string },
     columns: {
-        name: keyof ITransaction
+        name: keyof IRawTransaction
         number: number
-        filters?: string[]
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        func?: (val: any) => any
-    }[]
+        valueGetter?: (val: any) => any
+    }[],
+    monthGetter?: (timestamp: number, format: string) => string
 }

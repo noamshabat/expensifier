@@ -25,6 +25,6 @@ export const enum Views {
 }
   
   
-export const UNDEFINED_CATEGORY = 'undefined'
+export const UNDEFINED_CATEGORY = 'N/A'
 
 export type Filterable = string|number

@@ -1,45 +1,34 @@
 import Button from "@mui/material/Button"
-import moment from "moment"
 import React, { useContext, useEffect, useState } from "react"
 import * as API from "./api"
-import { Mapping, Transaction, TransactionType, UNDEFINED_CATEGORY, Views } from "./types"
+import { Transaction, UNDEFINED_CATEGORY, Views } from "./types"
 
 type FiltersDesc = { [key in keyof Partial<Transaction>]: unknown[] }
 
 interface AppContextProps {
     transactions: Transaction[]
-    mappings: Mapping[]
-    categoryNames: string[]
-    monthNames: string[]
-    originNames: string[]
     filteredMonths: string[]
     filteredCategories: string[]
-    typeNames: string[]
     filters: FiltersDesc,
     view: Views,
-    setMappings: (mappings: Mapping[]) => void
     setFilters: (desc: FiltersDesc) => void
     setView: (view: Views) => void
+    fetchTransactions: () => void
 }
 
-let _setMappings = (_mappings: Mapping[]) => { null }
 let _setFilters = (_desc: FiltersDesc) => { null }
 let _setView = (_view: Views) => { null }
+let _fetchTransactions = () => { null }
 
 const initialContext: AppContextProps = {
     transactions: [],
-    mappings: [],
-    categoryNames: [],
-    monthNames: [],
-    originNames: [],
-    typeNames: [TransactionType.Expense, TransactionType.Income],
     filteredMonths: [],
     filteredCategories: [],
     filters: {},
     view: Views.List,
     setView: (view: Views) : void => { _setView(view) },
-    setMappings: (mappings: Mapping[]): void => { _setMappings(mappings) },
     setFilters: (desc: FiltersDesc): void => { _setFilters(desc) },
+    fetchTransactions: (): void => _fetchTransactions(),
 }
 
 const Context = React.createContext(initialContext)
@@ -56,62 +45,23 @@ export const AppContext: React.FC<React.PropsWithChildren<unknown>> = (props) =>
 
     useEffect(() => {
         console.log('mounting context')
-        Promise.all([API.getTransactions(), API.getMappings()]).then(([transactions, mappings]) => {
-            setOriginalTransactions(transactions)
-
-            const months: string[] = []
-            const origins: string[] = []
-
-            const withCategories = transactions.map((t) => {
-                const matches = mappings.filter((m) => t.description.match(m.regex))
-                if (matches && matches.length) {
-                    t.category = matches[0].categoryName
-                    if (matches.length > 1) {
-                        console.error('Found multiple matches for record', matches, t)
-                    }
-                } else {
-                    t.category = UNDEFINED_CATEGORY
-                }
-
-                // get month
-                let month = moment(t.date, 'DD/MM/YYYY').format('YYYY-MM')
-                if (t.origin.includes('Discount Bank Credit Card')) month = moment(t.date).subtract(1, 'month').format('YYYY-MM')
-                if (!months.includes(month)) months.push(month)
-                t.month = month
-                if (!origins.includes(t.origin)) origins.push(t.origin)
-
-                // get month end
-                return t
-            })
-            const categories = Array.from(new Set(mappings.map((m) => m.categoryName)));
-            categories.push(UNDEFINED_CATEGORY)
-            
-            setContextValue({
-                ...initialContext,
-                transactions: withCategories, 
-                mappings, 
-                categoryNames: categories,
-                monthNames: months,
-                originNames: origins,
-                filteredMonths: months,
-                filteredCategories: categories,
-                filters: initialContext.filters,
-                setMappings: initialContext.setMappings,
-                setFilters: initialContext.setFilters
+        Promise.all([API.getTransactions()]).then(([transactions]) => {
+            API.getFacets().then((facets) => {
+                setOriginalTransactions(transactions)
+                setContextValue({
+                    ...initialContext,
+                    transactions, 
+                    filteredMonths: facets.month as string[],
+                    filteredCategories: facets.category as string[],
+                    filters: initialContext.filters,
+                    setFilters: initialContext.setFilters
+                })
             })
         })
         return () => console.log('unmounting context')
     }, [])
 
     useEffect(() => {
-        _setMappings = (mappings: Mapping[]) => {
-            setContextValue({
-                ...contextValue,
-                mappings
-            })
-            API.setMappings(mappings)
-        }
-
         _setFilters = (desc: FiltersDesc) => {
             const newFilters = { ...contextValue.filters, ...desc }
             let newTransactions = [...originalTransactions]
@@ -119,7 +69,7 @@ export const AppContext: React.FC<React.PropsWithChildren<unknown>> = (props) =>
                 newTransactions = newTransactions.filter((t) => !values || values.length === 0 || values.includes(t[filter as keyof Transaction]))
             })
             const monthNames = Array.from(new Set(newTransactions.map((t) => t.month)))
-            const categoryNames = Array.from(new Set(newTransactions.map((t) => t.category || 'undefined')))
+            const categoryNames = Array.from(new Set(newTransactions.map((t) => t.category || UNDEFINED_CATEGORY)))
             setContextValue({
                 ...contextValue,
                 transactions: newTransactions,
@@ -131,6 +81,10 @@ export const AppContext: React.FC<React.PropsWithChildren<unknown>> = (props) =>
 
         _setView = (view: Views) => {
             setContextValue({...contextValue, view})
+        }
+
+        _fetchTransactions = () => {
+            API.getTransactions().then((transactions) => setContextValue({ ...contextValue, transactions }))
         }
     }, [contextValue, originalTransactions])
 

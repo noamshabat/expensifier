@@ -25,9 +25,9 @@ const CalCreditCardDatumGuides: DataGuide = {
     name: CAL_CREDIT_CARD,
     startRow: 4,
     columns: [
-        { name: 'date', number: 1, func: (val) => moment(val, 'DD/MM/YY').format('DD/MM/YYYY') },
-        { name: 'description', number: 2, filters: [], },
-        { name: 'amount', number: 4, func: (val) => {
+        { name: 'timestamp', number: 1, valueGetter: (val) => moment(val, 'DD/MM/YY').valueOf() },
+        { name: 'description', number: 2 },
+        { name: 'amount', number: 4, valueGetter: (val) => {
             if (typeof val === 'string') {
                 let ret = val
                 if (ret.includes(' ')) ret = ret.split(' ')[1]
