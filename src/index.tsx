@@ -6,18 +6,20 @@ import reportWebVitals from './reportWebVitals';
 import { AppContext } from './AppContext';
 import { FacetsContext } from './context/FacetsContext';
 import { MappingsContext } from './context/MappingsContext';
-
+import { FiltersContext } from './context/FiltersContext';
 
 async function start() {
   render(
     <React.StrictMode>
-      <FacetsContext>
-        <AppContext>
-          <MappingsContext>
-            <App />
-          </MappingsContext>
-        </AppContext>
-      </FacetsContext>
+      <FiltersContext>
+        <FacetsContext>
+          <AppContext>
+            <MappingsContext>
+              <App />
+            </MappingsContext>
+          </AppContext>
+        </FacetsContext>
+      </FiltersContext>
     </React.StrictMode>
   , document.getElementById('root') as HTMLElement);
   

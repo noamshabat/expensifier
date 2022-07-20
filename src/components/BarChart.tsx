@@ -4,9 +4,13 @@ import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, BarChart as ReBarCha
 import { TransactionType, Views } from "../types";
 import Box from "@mui/material/Box";
 import { useState } from "react";
+import { useFilters } from "../context/FiltersContext";
+import { useFacets } from "../context/FacetsContext";
 
-export function BarChart() {
-    const { transactions, filteredMonths, filteredCategories, setFilters, setView } = useAppContext()
+export function BarChart(p: { setView: (view:Views) => void }) {
+    const { transactions } = useAppContext()
+    const { filters, setFilters } = useFilters()
+    const { filteredFacets } = useFacets()
     const [hoveredExpense, setHoveredExpense] = useState('')
 
     const colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#00B3E6', 
@@ -25,11 +29,13 @@ export function BarChart() {
         income: number,
     } | { [key: string]: number})[]
 
-    const chartData = filteredMonths.reduce<ChartDataType>((agg, monthName) => {
+    if (!filters.month) return null
+    if (!filters.category) return null
+    const chartData = filteredFacets.month.reduce<ChartDataType>((agg, monthName) => {
         agg.push({
             month: monthName,
             ...(
-                filteredCategories.reduce<{[key: string]: number}>((catAgg, cat) => {
+                filteredFacets.category.reduce<{[key: string]: number}>((catAgg, cat) => {
                     catAgg[cat] = transactions.filter((f) => f.month === monthName && f.type === TransactionType.Expense && f.category === cat)
                                              .reduce<number>((last, curr) => last - curr.amount, 0)
                     return catAgg
@@ -127,7 +133,7 @@ export function BarChart() {
                             stackId="expense"
                             onClick={(data) => {
                                 setFilters({ category: [cat], month: [data.month] })
-                                setTimeout(() => setView(Views.List), 0)
+                                setTimeout(() => p.setView(Views.List), 0)
                             }}
                         />
                     })

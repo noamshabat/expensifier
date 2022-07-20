@@ -21,7 +21,6 @@ export type Mapping = {
 export const enum Views {
     List='List',
     Bar='Bar',
-    CategoryPie='Category Pie'
 }
   
   

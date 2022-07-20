@@ -7,7 +7,7 @@ import { IWebServer } from './types'
 import { inject, injectable } from 'inversify'
 import { IMapper } from '../mapper/types'
 import { TYPES } from '../types'
-import { ALL_FACETS, IStore } from '../store/types'
+import { ALL_FACETS, FiltersDesc, IStore } from '../store/types'
 import { ILogger } from '../logger/types'
 import { EnvVar, IEnvironment } from '../environment/environment.types'
 
@@ -49,7 +49,8 @@ export class WebServer implements IWebServer {
 		})
 
 		app.get('/transactions', (req: Request, res: Response) => {
-			res.status(200).send(this._store.getAll())
+			const filters = (req.query.filters ? JSON.parse(req.query.filters as string) : {}) as FiltersDesc
+			res.status(200).send(this._store.getTransactions(filters))
 		})
 
 		app.get('/mappings', (req: Request, res: Response) => {
@@ -57,7 +58,8 @@ export class WebServer implements IWebServer {
 		})
 
 		app.get('/facets', (req: Request, res: Response) => {
-			res.status(200).json(this._store.getDistinctFacetValues(ALL_FACETS))
+			const filters = (req.query.filters ? JSON.parse(req.query.filters as string) : {}) as FiltersDesc
+			res.status(200).json(this._store.getDistinctFacetValues(ALL_FACETS, filters))
 		})
 
 		app.post('/mappings', (req: Request, res: Response) => {

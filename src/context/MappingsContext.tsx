@@ -10,13 +10,13 @@ const Context = React.createContext(initialContext)
 
 export const MappingsContext: React.FC<React.PropsWithChildren<unknown>> = (props) => {
     const { fetchTransactions } = useAppContext()
-    const { fetch } = useFacets()
+    const { fetchFacets } = useFacets()
 
     return <Context.Provider value={{ 
         setMapping: (mapping: Mapping) => {
             API.addMapping(mapping).then(() => {
                 fetchTransactions()
-                fetch()
+                fetchFacets()
             })
         }
     }}>

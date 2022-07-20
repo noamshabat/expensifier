@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import * as API from "../api"
+import { FiltersDesc, useFilters } from "./FiltersContext"
 
 export type Facets = {
     category: string[]
@@ -10,30 +11,40 @@ export type Facets = {
 
 type FacetsContext = {
     facets: Facets
-    fetch: () => void
+    filteredFacets: Facets
+    fetchFacets: () => void
 }
 
+const emptyFacets = {
+    category: [],
+    month: [],
+    origin: [],
+    type: [],
+} 
+
 const initialContext: FacetsContext = {
-    facets: {
-        category: [],
-        month: [],
-        origin: [],
-        type: [],
-    },
-    fetch: () => { null }
+    facets: emptyFacets,
+    filteredFacets: emptyFacets, 
+    fetchFacets: () => { null }
 }
 
 const Context = React.createContext(initialContext)
 
 export const FacetsContext: React.FC<React.PropsWithChildren<unknown>> = (props) => {
+    const { filters } = useFilters();
     const [facets, setFacets] = useState(initialContext.facets)
-    const fetch = () => API.getFacets().then(setFacets)
-    useEffect(() => { fetch() }, [])
+    const [filteredFacets, setFilteredFacets] = useState(initialContext.facets)
+        
+    useEffect(() => { API.getFacets({}).then(setFacets) }, [])
+    useEffect(() => { fetch() }, [filters])
+
+    const fetch = () => API.getFacets(filters).then(setFilteredFacets)
 
     return <Context.Provider 
         value={{
             facets,
-            fetch,
+            filteredFacets,
+            fetchFacets: fetch,
         }}
     >
         {props.children}

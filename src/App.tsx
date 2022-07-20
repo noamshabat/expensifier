@@ -1,24 +1,23 @@
 import './App.css';
 import { TransactionList } from './components/TransactionList';
 import { BarChart } from './components/BarChart';
-import { PieChart } from './components/PieChart';
 import { Filters } from './components/Filters';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { Views } from './types'
-import { useAppContext } from './AppContext';
-
-const ViewComponents = {
-  [Views.List]: TransactionList,
-  [Views.Bar]: BarChart,
-  [Views.CategoryPie]: PieChart,
-}
+import { useState } from 'react';
 
 function App() {
-  const { view, setView } = useAppContext()
-  const ViewToRender = ViewComponents[view]
+  const [ view, setView ] = useState<Views>(Views.List)
+
+  const ViewToRender = (view: Views) => {
+    switch (view) {
+      case Views.List: return <TransactionList />
+      case Views.Bar: return <BarChart setView={setView} />
+    }
+  }
 
   return (
     <div className="App">
@@ -33,10 +32,9 @@ function App() {
         >
           <MenuItem value={Views.List}>{Views.List}</MenuItem>
           <MenuItem value={Views.Bar}>{Views.Bar}</MenuItem>
-          <MenuItem value={Views.CategoryPie}>{Views.CategoryPie}</MenuItem>
         </Select>
       </FormControl>
-      <ViewToRender />
+      {ViewToRender(view)}
     </div>
   );
 }
