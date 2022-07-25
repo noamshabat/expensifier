@@ -1,4 +1,4 @@
-import { useAppContext } from "../AppContext";
+import { useTransactions } from "../context/TransactionsContext";
 import Paper from '@mui/material/Paper';
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, BarChart as ReBarChart } from "recharts";
 import { TransactionType, Views } from "../types";
@@ -8,7 +8,7 @@ import { useFilters } from "../context/FiltersContext";
 import { useFacets } from "../context/FacetsContext";
 
 export function BarChart(p: { setView: (view:Views) => void }) {
-    const { transactions } = useAppContext()
+    const { transactions } = useTransactions()
     const { filters, setFilters } = useFilters()
     const { filteredFacets } = useFacets()
     const [hoveredExpense, setHoveredExpense] = useState('')

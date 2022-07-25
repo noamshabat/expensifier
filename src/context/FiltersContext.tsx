@@ -10,7 +10,7 @@ type FiltersContext = {
 const Context = React.createContext({ filters: {}, setFilters: () => { null }} as FiltersContext)
 
 export const FiltersContext: React.FC<React.PropsWithChildren<unknown>> = (props) => {
-    const [filters, setFiltersState] = useState({})
+    const [filters, setFiltersState] = useState<FiltersDesc>({category: [], month: [], type: [], origin: []})
     return <Context.Provider value={{
         filters, 
         setFilters: (desc: FiltersDesc) => setFiltersState({...filters, ...desc})

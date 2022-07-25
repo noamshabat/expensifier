@@ -8,6 +8,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { Views } from './types'
 import { useState } from 'react';
+import { UndoRedo } from './components/UndoRedo';
 
 function App() {
   const [ view, setView ] = useState<Views>(Views.List)
@@ -21,6 +22,7 @@ function App() {
 
   return (
     <div className="App">
+      <UndoRedo view={view} setView={setView} />
       <Filters filters={['month', 'category', 'type', 'origin']} />
       <FormControl>
         <InputLabel id="view-label">View</InputLabel>

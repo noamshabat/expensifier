@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@mui/material/Button'
-import { useAppContext } from '../AppContext';
+import { useTransactions } from '../context/TransactionsContext';
 import { TextField } from '@mui/material';
 import { Transaction } from '../types'
 import { useMappings } from '../context/MappingsContext';
@@ -66,7 +66,7 @@ function TransactionRow({ transaction }: { transaction: Transaction}) {
     </>)
 }
 export function TransactionList() {
-    const { transactions } = useAppContext()
+    const { transactions } = useTransactions()
     return (
         <TableContainer component={Paper}>
             <Table stickyHeader aria-label="collapsible table">

@@ -3,7 +3,7 @@ import {render} from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AppContext } from './AppContext';
+import { TransactionsContext } from './context/TransactionsContext';
 import { FacetsContext } from './context/FacetsContext';
 import { MappingsContext } from './context/MappingsContext';
 import { FiltersContext } from './context/FiltersContext';
@@ -13,11 +13,11 @@ async function start() {
     <React.StrictMode>
       <FiltersContext>
         <FacetsContext>
-          <AppContext>
+          <TransactionsContext>
             <MappingsContext>
               <App />
             </MappingsContext>
-          </AppContext>
+          </TransactionsContext>
         </FacetsContext>
       </FiltersContext>
     </React.StrictMode>

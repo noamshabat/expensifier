@@ -1,5 +1,4 @@
 import { Box } from "@mui/material"
-import { useAppContext } from "../AppContext"
 import { useFacets } from "../context/FacetsContext"
 import { useFilters } from "../context/FiltersContext"
 import { Filterable, Transaction } from "../types"

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import * as API from "../api"
-import { FiltersDesc, useFilters } from "./FiltersContext"
+import { useFilters } from "./FiltersContext"
 
 export type Facets = {
     category: string[]
