@@ -9,6 +9,9 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from '@mui/material/CircularProgress';
+import { InputBaseProps } from "@mui/material"
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -45,7 +48,10 @@ type FilterProps<T> = {
   filtered: T[]
   setFilter: (newFilters: T[]) => void
   names: T[]
+  loading: boolean
+  color?: InputBaseProps["color"]
 }
+
 export function GenericFilter<T extends Filterable>(props: FilterProps<T>) {
     const classes = useStyles();
 
@@ -62,18 +68,22 @@ export function GenericFilter<T extends Filterable>(props: FilterProps<T>) {
 
     return <div>
         <FormControl sx={{ m: 1, width: 300 }} variant="outlined">
-        <InputLabel>{props.filterName}</InputLabel>
+        <InputLabel color={props.color}>{props.filterName}</InputLabel>
         <Select
+          disabled={props.loading}
+          displayEmpty
           id={`${props.filterName}-filter`}
           label={props.filterName}
           multiple
+          color={props.color}
           value={props.filtered}
           onChange={handleChange}
           renderValue={(selected: Filterable[]) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value.toString()} label={value.toString()} />
+                <Chip color={props.color} key={value.toString()} label={value.toString()} size="small" />
               ))}
+              { props.loading && <CircularProgress color={props.color} size="20px" sx={{ marginLeft: 'auto'}}/>}
             </Box>
           )}
           MenuProps={MenuProps}

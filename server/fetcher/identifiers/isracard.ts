@@ -1,6 +1,6 @@
 import moment from "moment"
-import { IRunner } from "../runner/type"
-import { DataGuide, SheetIdentifier } from "./type"
+import { IRunner } from "../runner/types"
+import { DataGuide, SheetIdentifier } from "./types"
 
 const ISRACARD_CREDIT_CARD = 'IsraCard Credit Card'
 

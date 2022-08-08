@@ -6,4 +6,7 @@ export const TYPES = {
     IServer: Symbol.for('IServer'),
     IEnvironment: Symbol.for('IEnvironment'),
     IRunner: Symbol.for('IRunner'),
+    IFileManager: Symbol.for('IFileManager')
 }
+
+export const UPLOAD_FOLDER='uploads/'

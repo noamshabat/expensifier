@@ -1,27 +1,42 @@
-import React, { useContext } from "react"
-import { Mapping } from "../types"
-import * as API from '../api'
-import { useTransactions } from "./TransactionsContext"
-import { useFacets } from "./FacetsContext"
+import { useMemo, createContext, useState, useContext, useEffect } from "react"
+import { addMapping, getMappings } from "../api"
+import { CategoryKeys, Mapping } from "../shared.types"
 
-// we need an initial context for the type engine
-const initialContext = { setMapping: (_mapping: Mapping) => { null } }
-const Context = React.createContext(initialContext)
+type MappingContext = { 
+    mappings: { category: Mapping[], category2: Mapping[], category3: Mapping[], category4: Mapping[] },
+    setMapping: (category: string, rule: string, id: CategoryKeys) => Promise<void>
+}
+const initial: MappingContext = { mappings: { category: [], category2: [], category3: [], category4: [] }, setMapping: () => Promise.resolve() }
+const Context = createContext(initial)
 
-export const MappingsContext: React.FC<React.PropsWithChildren<unknown>> = (props) => {
-    const { fetchTransactions } = useTransactions()
-    const { fetchFacets } = useFacets()
+const CategoryKeyToIndex: { [key in CategoryKeys]: number } = { category: 0, category2: 1, category3: 2, category4: 3 }
 
-    return <Context.Provider value={{ 
-        setMapping: (mapping: Mapping) => {
-            API.addMapping(mapping).then(() => {
-                fetchTransactions()
-                fetchFacets()
-            })
-        }
-    }}>
-        {props.children}
-    </Context.Provider> 
+export const MappingContext: React.FC<React.PropsWithChildren<unknown>> = (props) => {
+    const [mappings, setMappings] = useState<MappingContext["mappings"]>(initial.mappings)
+    
+    useEffect(() => { fetch() }, [])
+
+    const fetch = async () => {
+        const res = await getMappings()
+        setMappings({
+            category: res[0],
+            category2: res[1],
+            category3: res[2],
+            category4: res[3],
+        })
+    }
+
+    const setMappingApi = async (category: string, rule: string, id: CategoryKeys) => {
+        await addMapping({ categoryName: category, regex: rule }, CategoryKeyToIndex[id])
+        await fetch()
+    }
+
+    const contextValue = useMemo(() =>({
+        mappings,
+        setMapping: setMappingApi
+    }), [mappings])
+
+    return <Context.Provider value={contextValue}>{props.children}</Context.Provider>
 }
 
 export function useMappings() {

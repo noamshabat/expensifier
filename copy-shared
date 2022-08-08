@@ -1,0 +1,12 @@
+#!/bin/bash -x
+tname="shared.types.ts"
+prepend="// DO NOT EDIT! - THIS FILE IS AUTO-GENERATED (COPIED) FROM {project-root}/shared/types.ts"
+
+chmod +w ./server/$tname
+chmod +w ./src/$tname
+
+cat <(echo $prepend) ./shared/types.ts > ./server/$tname
+cat <(echo $prepend) ./shared/types.ts > ./src/$tname
+
+chmod -w ./server/$tname
+chmod -w ./src/$tname

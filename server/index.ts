@@ -1,6 +1,7 @@
 import { Container } from "inversify";
 import { Environment } from "./environment/environment";
 import { Runner } from "./fetcher/runner/runner";
+import { FileManager } from "./fs/fileManager";
 import { Logger } from "./logger/logger";
 import { Mapper } from "./mapper/mappings";
 import { Server } from "./server";
@@ -16,6 +17,7 @@ container.bind(TYPES.IMapper).to(Mapper).inSingletonScope()
 container.bind(TYPES.IStore).to(Store).inSingletonScope()
 container.bind(TYPES.IWebServer).to(WebServer).inSingletonScope()
 container.bind(TYPES.IRunner).to(Runner).inSingletonScope()
+container.bind(TYPES.IFileManager).to(FileManager).inSingletonScope()
 
 // this starts the app
 container.get(TYPES.IServer)

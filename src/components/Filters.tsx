@@ -1,17 +1,25 @@
-import { Box } from "@mui/material"
-import { useFacets } from "../context/FacetsContext"
+import Stack from "@mui/material/Stack"
+import { Facets, useFacets } from "../hooks/useFacets"
 import { useFilters } from "../context/FiltersContext"
-import { Filterable, Transaction } from "../types"
+import { Filterable } from "../types"
+import { Transaction } from '../shared.types'
 import { GenericFilter } from "./GenericFilter"
+import { InputBaseProps } from "@mui/material"
 
 type FiltersProps = {
     filters: Array<keyof Partial<Transaction>>
 }
 
-export function GenericFilterWrapper(props: { name: keyof Transaction }) {
-    const { facets } = useFacets()
+const FacetColors: {[key in keyof Facets]?: InputBaseProps["color"]} = {
+    category: 'primary',
+    category2: 'secondary',
+    category3: 'warning',
+    category4: 'success',
+}
+
+export function GenericFilterWrapper(props: { name: keyof Transaction, facets: Facets, loading: boolean }) {
     const { filters, setFilters } = useFilters()
-    const names = facets[props.name as keyof typeof facets]
+    const names = props.facets[props.name as keyof Facets]
 
     const setFilter = (newFilter: Filterable[]) => {
         setFilters({ [props.name]: newFilter})
@@ -22,11 +30,15 @@ export function GenericFilterWrapper(props: { name: keyof Transaction }) {
                 names={names as Filterable[]} 
                 filtered={filters[props.name] as Filterable[] || []}
                 setFilter={setFilter} 
+                loading={props.loading}
+                color={FacetColors[props.name as keyof typeof FacetColors] || undefined}
             />
 }
 
 export function Filters(props: FiltersProps) {
-    return <Box sx={{display: 'flex'}}>
-        {props.filters.map((f) => <GenericFilterWrapper key={f} name={f} />)}
-    </Box>   
+    const { facets, loading } = useFacets()
+    
+    return <Stack direction='row' flexWrap={'wrap'}>
+        {props.filters.map((f) => <GenericFilterWrapper key={f} name={f} facets={facets} loading={loading} />)}
+    </Stack>   
 }

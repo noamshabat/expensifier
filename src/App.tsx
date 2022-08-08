@@ -1,43 +1,40 @@
-import './App.css';
 import { TransactionList } from './components/TransactionList';
 import { BarChart } from './components/BarChart';
 import { Filters } from './components/Filters';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import { Views } from './types'
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { UndoRedo } from './components/UndoRedo';
+import { Stack, Box } from '@mui/material';
+import { ViewSelector } from './components/ViewSelector';
+import { log } from './utils';
+import { ALL_FACETS } from './shared.types';
+import { UploadFiles } from './components/UploadFiles';
 
 function App() {
   const [ view, setView ] = useState<Views>(Views.List)
+  const [viewBoxNode, setViewBoxNode] = useState<HTMLDivElement|undefined>()
+  const refCallback = useCallback(node => {
+    log('Node ref changed', node)
+    node && setViewBoxNode(node)
+  }, [])
 
   const ViewToRender = (view: Views) => {
     switch (view) {
-      case Views.List: return <TransactionList />
+      case Views.List: return <TransactionList parent={viewBoxNode} />
       case Views.Bar: return <BarChart setView={setView} />
     }
   }
 
   return (
-    <div className="App">
-      <UndoRedo view={view} setView={setView} />
-      <Filters filters={['month', 'category', 'type', 'origin']} />
-      <FormControl>
-        <InputLabel id="view-label">View</InputLabel>
-        <Select
-          labelId="view-label"
-          value={view}
-          label="View"
-          onChange={(e) => setView(e.target.value as Views)}
-        >
-          <MenuItem value={Views.List}>{Views.List}</MenuItem>
-          <MenuItem value={Views.Bar}>{Views.Bar}</MenuItem>
-        </Select>
-      </FormControl>
-      {ViewToRender(view)}
-    </div>
+    <Stack sx={{padding: '32px', height: '100vh', boxSizing: 'border-box'}}>
+      <Stack direction='row' gap='16px'>
+        <UploadFiles />
+        <UndoRedo view={view} setView={setView} />
+        <ViewSelector view={view} setView={setView} />
+      </Stack>
+      <Filters filters={ALL_FACETS} />
+      <Box ref={refCallback} sx={{flex: 1, overflowY: 'scroll'}}>{ViewToRender(view)}</Box>
+    </Stack>
   );
 }
 

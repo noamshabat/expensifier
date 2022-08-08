@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { DataGuide, SheetIdentifier } from '../identifiers/type';
-import { IRunner } from '../runner/type';
+import { DataGuide, SheetIdentifier } from './types';
+import { IRunner } from '../runner/types';
 
 const CHECKING_ACCOUNT = 'Discount Bank Checking Account'
 const CREDIT_CARD = 'Discount Bank Credit Card'
@@ -44,13 +44,33 @@ const DBCreditCardDataGuide: DataGuide = {
     ],
     endRow: { column: 2, value: '' },
     monthGetter: (timestamp: number, format: string) => {
-        console.log('timestamp', timestamp)
-        console.log('moment.unix', moment.unix(timestamp).toISOString())
         return moment.unix(timestamp / 1000).subtract(1, 'month').format(format)
     }
 }
 
+const DBCreditCardIdentifier2: SheetIdentifier = {
+    name: CREDIT_CARD,
+    cells: [
+        { row: 1, column: 1, value: 'כרטיסי אשראי' },
+        { row: 12, column: 2, value: 'בית עסק' },
+        { row: 12, column: 8, value: 'תאריך החיוב' },
+    ]
+}
+const DBCreditCardDataGuide2: DataGuide = {
+    name: CREDIT_CARD,
+    startRow: 13,
+    columns: [
+        { name: 'timestamp', number: 8 , valueGetter: (val) => moment(val, 'DD/MM/YYYY').valueOf() },
+        { name: 'description', number: 2 },
+        { name: 'amount', number: 9, valueGetter: (val) => val.replace('₪','').replace(',','') * -1 },
+    ],
+    endRow: { column: 2, value: '' },
+    monthGetter: (timestamp: number, format: string) => {
+        return moment.unix(timestamp / 1000).subtract(1, 'month').format(format)
+    }
+}
 export function RegisterDiscountBankCheckingAccount(runner: IRunner) {
     runner.registerIdentifier(DBCheckingAccountIdentifier, DBCheckingAccountDatumGuides)
     runner.registerIdentifier(DBCreditCardIdentifier, DBCreditCardDataGuide)
+    runner.registerIdentifier(DBCreditCardIdentifier2, DBCreditCardDataGuide2)
 }

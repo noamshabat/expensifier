@@ -1,14 +1,15 @@
 import 'reflect-metadata'
 import { cellValue, loadFolder, sheetMatch } from '../excel/utils'
-import { DataGuide, SheetIdentifier } from '../identifiers/type'
-import { IRawTransaction, TransactionOrigin, TransactionType } from '../types'
+import { DataGuide, SheetIdentifier } from '../identifiers/types'
+import { TransactionOrigin, TransactionType } from '../../shared.types'
 import { WorkSheet } from 'xlsx'
 import { container } from '../..'
 import { TYPES } from '../../types'
-import { IStore } from '../../store/types'
-import { IRunner } from './type'
+import { IStore } from '../../store/store.types'
+import { IRunner } from './types'
 import { injectable } from 'inversify'
 import moment from 'moment'
+import { RawTransaction } from '../types'
 
 @injectable()
 export class Runner implements IRunner {
@@ -21,7 +22,7 @@ export class Runner implements IRunner {
 
         let rowIndex = startRow
         while (cellValue(sheet, rowIndex, guide.endRow.column) !== guide.endRow.value) {
-            const entry: Partial<IRawTransaction> = {}
+            const entry: Partial<RawTransaction> = {}
             
             guide.columns.forEach((c) => {
                 entry[c.name] = cellValue(sheet, rowIndex, c.number)
@@ -45,7 +46,7 @@ export class Runner implements IRunner {
             if (guide.monthGetter) entry.month = guide.monthGetter(entry.timestamp, 'YYYY-MM')
             else entry.month = moment.unix(entry.timestamp / 1000).format('YYYY-MM')
 
-            store.addTransaction(entry as IRawTransaction)
+            store.addTransaction(entry as RawTransaction)
         }
     }
 
@@ -63,6 +64,7 @@ export class Runner implements IRunner {
     }
 
     public run = async (path: string) => {
+        console.log('processing', path);
         (await loadFolder(path)).forEach((w) => {
             Object.values(w.Sheets).forEach((s) => this.process(s))
         })

@@ -1,17 +1,21 @@
-import { useTransactions } from "../context/TransactionsContext";
+import { useTransactions } from "../hooks/useTransactions";
 import Paper from '@mui/material/Paper';
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, BarChart as ReBarChart } from "recharts";
-import { TransactionType, Views } from "../types";
+import { Views } from "../types";
+import { TransactionType } from '../shared.types'
 import Box from "@mui/material/Box";
 import { useState } from "react";
+import { useFacets } from "../hooks/useFacets";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useFilters } from "../context/FiltersContext";
-import { useFacets } from "../context/FacetsContext";
 
 export function BarChart(p: { setView: (view:Views) => void }) {
-    const { transactions } = useTransactions()
-    const { filters, setFilters } = useFilters()
-    const { filteredFacets } = useFacets()
+    const { transactions, loading: transactionsLoading } = useTransactions()
+    const { filteredFacets, loading: facetsLoading } = useFacets()
+    const { setFilters } = useFilters()
     const [hoveredExpense, setHoveredExpense] = useState('')
+
+    if (facetsLoading || transactionsLoading) return <CircularProgress />
 
     const colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#00B3E6', 
     '#E6B333', '#3366E6', '#999966', '#B34D4D',
@@ -29,8 +33,6 @@ export function BarChart(p: { setView: (view:Views) => void }) {
         income: number,
     } | { [key: string]: number})[]
 
-    if (!filters.month) return null
-    if (!filters.category) return null
     const chartData = filteredFacets.month.reduce<ChartDataType>((agg, monthName) => {
         agg.push({
             month: monthName,

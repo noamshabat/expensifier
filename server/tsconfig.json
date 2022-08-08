@@ -6,6 +6,10 @@
     "experimentalDecorators": true,
     "lib": ["dom", "ES7"],
     "outDir": "dist",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "typeRoots": ["./types"],
+    "sourceMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node"
   }
 }

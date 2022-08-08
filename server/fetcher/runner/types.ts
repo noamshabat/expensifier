@@ -1,4 +1,4 @@
-import { DataGuide, SheetIdentifier } from '../identifiers/type';
+import { DataGuide, SheetIdentifier } from '../identifiers/types';
 
 export interface IRunner {
     registerIdentifier: (id: SheetIdentifier, guides: DataGuide) => void

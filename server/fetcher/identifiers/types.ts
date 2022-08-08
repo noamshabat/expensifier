@@ -1,4 +1,4 @@
-import { IRawTransaction } from '../types'
+import { RawTransaction } from '../types'
 
 export interface CellIdentifiers {
     row: number
@@ -19,7 +19,7 @@ export interface DataGuide {
     startRow: number
     endRow: { column: number, value: string },
     columns: {
-        name: keyof IRawTransaction
+        name: keyof RawTransaction
         number: number
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         valueGetter?: (val: any) => any

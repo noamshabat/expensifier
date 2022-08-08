@@ -1,15 +1,13 @@
-import { IRawTransaction } from "../fetcher/types"
+import { RawTransaction } from "../fetcher/types"
 
 export interface IMapper {
-    getMappings: VoidFunction
-    setMappings: (mappings: Mapping[]) => void
-    getCategory: (t: IRawTransaction) => string
-    addMapping: (mapping: Mapping) => void
+    getMappings: () => Mapping[][]
+    setMappings: (mappings: Mapping[][]) => void
+    getCategory: (t: RawTransaction, categoryIndex: number) => string
+    addMapping: (mapping: Mapping, categoryIndex: number) => void
 }
 
 export type Mapping = {
     categoryName: string
     regex: string
 }
-
-export const UNDEFINED_CATEGORY = 'N/A'

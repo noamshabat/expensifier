@@ -1,11 +1,12 @@
 import 'reflect-metadata'
 import { inject, injectable } from "inversify"
-import { IRawTransaction, ITransaction } from "../fetcher/types"
-import { FacetKeys, Facets, FiltersDesc, IStore } from "./types"
+import { RawTransaction } from "../fetcher/types"
+import { Facets, FiltersDesc, IStore } from "./store.types"
 import { TYPES } from '../types'
 import { IMapper } from '../mapper/types'
+import { FacetKeys, Transaction } from '../shared.types'
 
-type IStoreContents = { transactions: ITransaction[] } 
+type IStoreContents = { transactions: Transaction[] } 
 
 @injectable()
 export class Store implements IStore {
@@ -19,7 +20,7 @@ export class Store implements IStore {
 	private _store: IStoreContents = { transactions: [] }
 	private _filterCache: { [key: string]: IStoreContents } = {}
 	
-	public addTransaction(t: IRawTransaction) { this._store.transactions.push(this.processTransaction(t)) }
+	public addTransaction(t: RawTransaction) { this._store.transactions.push(this.processTransaction(t)) }
 	public getTransactions = (filters: FiltersDesc) => {
 		const filterString = JSON.stringify(filters)
 		
@@ -32,10 +33,10 @@ export class Store implements IStore {
 		return this._filterCache[filterString].transactions
 	}
 
-	private filterTransaction(t: ITransaction, filters: FiltersDesc): boolean {
+	private filterTransaction(t: Transaction, filters: FiltersDesc): boolean {
 		for ( const key of Object.keys(filters)) {
 			const filter = filters[key as keyof FiltersDesc]
-			if (filter && filter.length && !filter.includes(t[key as keyof ITransaction])) return false
+			if (filter && filter.length && !filter.includes(t[key as keyof Transaction])) return false
 		}
 		return true
 	}
@@ -57,12 +58,17 @@ export class Store implements IStore {
 
 	public reProcessTransactions() {
 		this._store.transactions.forEach((t, i, a) => { a[i] = this.processTransaction(t)})
+		this._filterCache = {}
 	}
 
-	private processTransaction(t: IRawTransaction): ITransaction {
+	private processTransaction(t: RawTransaction): Transaction {
+		this._filterCache = {}
 		return {
 			...t,
-			category: this.mapper.getCategory(t),
+			category: this.mapper.getCategory(t, 0),
+			category2: this.mapper.getCategory(t, 1),
+			category3: this.mapper.getCategory(t, 2),
+			category4: this.mapper.getCategory(t, 3),
 		}
 	}
 }

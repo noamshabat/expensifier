@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { SheetIdentifier } from '../identifiers/type';
+import { SheetIdentifier } from '../identifiers/types';
 import { readFile, WorkBook, WorkSheet } from 'xlsx'
 
 export const cellName = (row: number, col: number) => {
@@ -31,6 +31,7 @@ export const loadFile = async (path: string): Promise<WorkBook> => {
 
 export const loadFolder = async (path: string): Promise<WorkBook[]> => {
     const files = await fs.readdir(path)
+    console.log('files', files)
     //listing all files using forEach
     const xlsx = files.filter((file) => file.endsWith('.xlsx') || file.endsWith('.xls'));
     return Promise.all(xlsx.map((file) => loadFile(path + file)))

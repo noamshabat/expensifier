@@ -8,7 +8,6 @@ import { EnvVar, IEnvironment } from './environment.types'
 config({ path: '.env.server' })
 
 const envType: { [key in EnvVar]: string} = {
-	[EnvVar.DATA_FOLDER]: '',
 	[EnvVar.SERVER_PORT]: '',
 }
 

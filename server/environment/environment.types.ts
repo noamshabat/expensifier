@@ -1,5 +1,4 @@
 export const enum EnvVar {
-    DATA_FOLDER='DATA_FOLDER',
     SERVER_PORT='SERVER_PORT',
 }
 
