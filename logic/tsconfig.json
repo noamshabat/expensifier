@@ -1,19 +1,18 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts", "dist"],
   "compilerOptions": {
     "experimentalDecorators": true,
-    "lib": ["dom", "ES7"],
-    "outDir": "../dist/server",
+    "lib": ["ES2020", "DOM"],
+    "outDir": "../dist/logic",
     "downlevelIteration": true,
     "typeRoots": ["./types"],
     "sourceMap": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "composite": true
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
   },
-  "references": [
-     {"path": "../logic"}
-  ]
 }

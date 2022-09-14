@@ -53,25 +53,31 @@ export function SetCategoryDialog(p: { transaction: Transaction }) {
     </div>
 }
 
-type SetCategoryProps = {
+type SetCategoryProps = React.PropsWithChildren<{
     id: CategoryKeys,
     transaction: Transaction
-}
+}>
 function CategoryDisplay(p: SetCategoryProps) {
-    return <Stack direction='row' gap={2} alignItems='center'
-        sx={{ paddingX: 2, paddingY: 1, border: 1, borderColor: 'text.disabled', borderRadius: 2 }}>
-        <Typography variant='body2' sx={{ width: 70 }}>{p.id}</Typography>
-        <Divider orientation='vertical' sx={{ alignSelf: 'stretch', height: 'auto', marginRight: 1 }} />
-        <Typography variant='subtitle2'>{p.transaction[p.id as keyof Transaction]}</Typography>
-        <Box sx={{ marginLeft: 'auto' }}><CategorySetter {...p} /></Box>
-    </Stack>
+    return <CategorySetter {...p}>
+        <Stack direction='row' gap={2} alignItems='center'
+            sx={{ cursor: 'pointer', paddingX: 2, paddingY: 1, border: 1, borderColor: 'text.disabled', borderRadius: 2 }}>
+            <Typography variant='body2' sx={{ width: 70 }}>{p.id}</Typography>
+            <Divider orientation='vertical' sx={{ alignSelf: 'stretch', height: 'auto', marginRight: 1 }} />
+            <Typography variant='subtitle2'>{p.transaction[p.id as keyof Transaction]}</Typography>
+            <Box sx={{ marginLeft: 'auto' }}><EditIcon sx={{ cursor: 'pointer' }} /></Box>
+        </Stack>
+    </CategorySetter>
+}
+
+function safeRegex(str: string) {
+    return str.replaceAll(/([()[\]])/g, '\\$1')
 }
 
 function CategorySetter(p: SetCategoryProps) {
     const { mappings, setMapping } = useMappings()
     const [open, setOpen] = useState(false)
     const { facets } = useFacets()
-    const [rule, setRule] = useState('')
+    const [rule, setRule] = useState(p.transaction[p.id] === UNDEFINED_CATEGORY ? safeRegex(p.transaction.description) : '')
     const [helperText, setHelperText] = useState('')
     const [ruleColor, setRuleColor] = useState<BaseTextFieldProps["color"]>()
     const [saveable, setSaveable] = useState(false)
@@ -110,7 +116,7 @@ function CategorySetter(p: SetCategoryProps) {
     }
 
     return <>
-        <EditIcon onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }} />
+        <Box onClick={() => setOpen(!open)}>{p.children}</Box>
         {open &&
             <Dialog open={true}>
                 <DialogTitle>Set {p.id} for {p.transaction.description}</DialogTitle>
@@ -128,10 +134,10 @@ function CategorySetter(p: SetCategoryProps) {
                     </Stack>
                     <Stack direction='column' spacing={1} marginTop={3}>
                         <DialogContentText>Set a rule using regex that can apply to multiple records</DialogContentText>
-                        <TextField 
+                        <TextField
                             label='rule'
-                            value={rule}
-                            onChange={(e) => setRule(e.target.value)}
+                            value={rule.replaceAll('\\s+', ' ')}
+                            onChange={(e) => setRule(e.target.value.replaceAll(' ', '\\s+'))}
                             color={ruleColor}
                             helperText={helperText}
                         />

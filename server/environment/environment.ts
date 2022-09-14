@@ -2,13 +2,14 @@
 import 'reflect-metadata'
 import { config } from 'dotenv'
 import { inject, injectable } from 'inversify'
-import { ILogger } from '../logger/types'
-import { TYPES } from '../types'
+import { ILogger } from '../../logic/logger/types'
 import { EnvVar, IEnvironment } from './environment.types'
+import { LOGIC_TYPES } from '../../logic/types'
 config({ path: '.env.server' })
 
 const envType: { [key in EnvVar]: string} = {
 	[EnvVar.SERVER_PORT]: '',
+	[EnvVar.DATA_PATH]: '',
 }
 
 @injectable()
@@ -17,7 +18,7 @@ export class Environment implements IEnvironment {
     private _env: typeof envType = process.env as typeof envType
 
 	constructor(
-		@inject(TYPES.ILogger) logger: ILogger,
+		@inject(LOGIC_TYPES.ILogger) logger: ILogger,
 	) {
 		this._logger = logger
 	}

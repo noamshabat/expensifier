@@ -1,7 +1,6 @@
 import React, { useContext, useMemo, useState } from "react"
-import { Transaction } from "../shared.types"
+import { FiltersDesc } from "../shared.types"
 
-export type FiltersDesc = { [key in keyof Partial<Transaction>]: unknown[] }
 type FiltersContext = {
     filters: FiltersDesc
     setFilters: (desc: FiltersDesc) => void
@@ -10,7 +9,7 @@ type FiltersContext = {
 const Context = React.createContext({ filters: {}, setFilters: () => { null }} as FiltersContext)
 
 export const FiltersContext: React.FC<React.PropsWithChildren<unknown>> = (props) => {
-    const [filters, setFiltersState] = useState<FiltersDesc>({category: [], month: [], type: [], origin: []})
+    const [filters, setFiltersState] = useState<FiltersDesc>({category: [], month: [], type: [], accountType: [], origin: []})
     
     const contextValue = useMemo(() => ({
         filters, 

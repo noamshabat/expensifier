@@ -10,15 +10,16 @@ export type Facets = {
     category3: string[]
     category4: string[]
     month: string[]
-    origin: string[]
+    accountType: string[]
     type: string[]
+    origin: string[]
 }
 
 type UseFacets = {
     facets: Facets
     filteredFacets: Facets
-    fetchFacets: () => void,
-    loading: boolean,
+    fetchFacets: () => void
+    loading: boolean
 }
 
 const emptyFacets = {
@@ -27,8 +28,9 @@ const emptyFacets = {
     category3: [],
     category4: [],
     month: [],
-    origin: [],
+    accountType: [],
     type: [],
+    origin: [],
 } 
 
 const initialValue: UseFacets = {

@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import Graceful from 'node-graceful';
-import { ILogger } from '../logger/types';
+import { ILogger } from '../../logic/logger/types';
+import { LOGIC_TYPES } from '../../logic/types';
 import { TYPES } from '../types';
 import { IWebServer } from '../webserver/types';
 
@@ -8,7 +9,7 @@ import { IWebServer } from '../webserver/types';
 export class GracefulWrapper {
     constructor(
         @inject(TYPES.IWebServer) webserver: IWebServer,
-        @inject(TYPES.ILogger) logger: ILogger,
+        @inject(LOGIC_TYPES.ILogger) logger: ILogger,
     ) {
         // Shutdown gracefully on any unhandled exception, rejection or signal.
         Graceful.captureExceptions = true;

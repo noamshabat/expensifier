@@ -1,7 +1,5 @@
-import { RawTransaction } from "../fetcher/types";
-import { FacetKeys, Transaction } from "../shared.types";
+import { FacetKeys, Facets, RawTransaction, Transaction } from "../shared.types";
 
-export type Facets = { [key in FacetKeys]?: string[] }
 export type FiltersDesc = { [key in keyof Partial<Transaction>]: unknown[] }
 
 export interface IStore {

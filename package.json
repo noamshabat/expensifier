@@ -34,8 +34,8 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.8/xlsx-0.18.8.tgz"
   },
   "scripts": {
-    "server": "nodemon --ignore ./server/mapper/data --exec npx ts-node -- --files ./server/index.ts",
-    "build-server": "tsc -p ./server/tsconfig.json && mkdir -p ./server/dist/mapper/data/ && cp ./server/mapper/data/* ./server/dist/mapper/data/",
+    "server": "nodemon --ignore ./data --exec npx ts-node -- --files ./server/index.ts",
+    "build-server": "tsc -b ./server/tsconfig.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

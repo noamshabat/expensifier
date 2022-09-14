@@ -1,31 +1,30 @@
 import 'reflect-metadata'
 import { inject, injectable } from "inversify";
-import { ILogger } from "./logger/types";
+import { ILogger } from "../logic/logger/types";
 import { TYPES, UPLOAD_FOLDER } from "./types";
 import { IWebServer } from './webserver/types';
 import { IEnvironment } from './environment/environment.types';
-import { IRunner } from './fetcher/runner/types';
-import { RegisterCalCreditCard } from './fetcher/identifiers/cal';
-import { RegisterDiscountBankCheckingAccount } from './fetcher/identifiers/discountBank';
-import { RegisterIsracardCreditCard } from './fetcher/identifiers/isracard';
-import { IFileManager } from './fs/fileManager.types';
+import { IRunner } from '../logic/fetcher/runner/types';
+import { IFileManager } from '../logic/fs/fileManager.types';
+import { ISheetIdentifier } from '../logic/fetcher/identifiers/identifier.types';
+import { LOGIC_TYPES } from '../logic/types';
 
 @injectable()
 export class Server {
     constructor(
-        @inject(TYPES.ILogger) logger: ILogger,
+        @inject(LOGIC_TYPES.ILogger) logger: ILogger,
         @inject(TYPES.IWebServer) webserver: IWebServer,
         @inject(TYPES.IEnvironment) env: IEnvironment,
-        @inject(TYPES.IRunner) runner: IRunner,
-        @inject(TYPES.IFileManager) fileManager: IFileManager,
+        @inject(LOGIC_TYPES.IRunner) runner: IRunner,
+        @inject(LOGIC_TYPES.IFileManager) fileManager: IFileManager,
+        @inject(LOGIC_TYPES.ISheetIdentifier) sheetIdentifier: ISheetIdentifier,
     ) {
-        logger.log('Starting service')
-        env.init()
-        fileManager.clearFolder(UPLOAD_FOLDER)
-        webserver.init()
-
-        RegisterCalCreditCard(runner);
-        RegisterDiscountBankCheckingAccount(runner);
-        RegisterIsracardCreditCard(runner);
+        void (async () => {
+            logger.log('Starting service')
+            env.init()
+            await fileManager.clearFolder(UPLOAD_FOLDER)
+            await sheetIdentifier.init()
+            webserver.init()
+        })()
     }
 }

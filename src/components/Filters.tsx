@@ -4,7 +4,7 @@ import { useFilters } from "../context/FiltersContext"
 import { Filterable } from "../types"
 import { Transaction } from '../shared.types'
 import { GenericFilter } from "./GenericFilter"
-import { InputBaseProps } from "@mui/material"
+import { InputBaseProps, TextField } from "@mui/material"
 
 type FiltersProps = {
     filters: Array<keyof Partial<Transaction>>
@@ -35,10 +35,22 @@ export function GenericFilterWrapper(props: { name: keyof Transaction, facets: F
             />
 }
 
+export function SearchFilter() {
+    const { filters, setFilters } = useFilters()
+
+    return <TextField 
+        placeholder="Search description"
+        value={filters.description && filters.description[0] || ''}
+        onChange={(e) => setFilters({ description: [e.target.value]})}
+        label="description"
+    />
+}
+
 export function Filters(props: FiltersProps) {
     const { facets, loading } = useFacets()
     
-    return <Stack direction='row' flexWrap={'wrap'}>
+    return <Stack direction='row' flexWrap={'wrap'} alignItems="center">
         {props.filters.map((f) => <GenericFilterWrapper key={f} name={f} facets={facets} loading={loading} />)}
+        <SearchFilter />
     </Stack>   
 }

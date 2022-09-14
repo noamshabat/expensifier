@@ -14,7 +14,7 @@ export function useTransactions(batchSize?: number) {
 
     const fetch = async (transactionsIn: Transaction[], refetch = false) => {
         // if we already have all transactions - nothing to do
-        if (transactionsIn.length && transactionsIn.length === total) return
+        if (!refetch && transactionsIn.length && transactionsIn.length === total) return
 
         const from = refetch ? 0 : transactionsIn.length
         const to = batchSize ? (transactionsIn.length + (refetch ? 0 : batchSize)) : undefined
@@ -35,6 +35,6 @@ export function useTransactions(batchSize?: number) {
         fetchNext: () => fetch(transactions),
         refresh: () => fetch([]),
         loading,
-        hasMore: transactions.length < total || !transactions.length,
+        hasMore: transactions.length < total,
     }
 }

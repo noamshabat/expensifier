@@ -4,9 +4,12 @@ prepend="// DO NOT EDIT! - THIS FILE IS AUTO-GENERATED (COPIED) FROM {project-ro
 
 chmod +w ./server/$tname
 chmod +w ./src/$tname
+chmod +w ./logic/$tname
 
 cat <(echo $prepend) ./shared/types.ts > ./server/$tname
 cat <(echo $prepend) ./shared/types.ts > ./src/$tname
+cat <(echo $prepend) ./shared/types.ts > ./logic/$tname
 
 chmod -w ./server/$tname
 chmod -w ./src/$tname
+chmod -w ./logic/$tname

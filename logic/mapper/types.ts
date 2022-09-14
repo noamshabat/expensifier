@@ -1,13 +1,8 @@
-import { RawTransaction } from "../fetcher/types"
+import { Mapping, RawTransaction } from "../shared.types"
 
 export interface IMapper {
     getMappings: () => Mapping[][]
-    setMappings: (mappings: Mapping[][]) => void
+    setMappings: (mappings: Mapping[][]) => Promise<void>
     getCategory: (t: RawTransaction, categoryIndex: number) => string
     addMapping: (mapping: Mapping, categoryIndex: number) => void
-}
-
-export type Mapping = {
-    categoryName: string
-    regex: string
 }

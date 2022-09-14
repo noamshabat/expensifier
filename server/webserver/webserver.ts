@@ -5,17 +5,15 @@ import cors from 'cors'
 import { ServiceException } from '../exceptions/ServiceException'
 import { IWebServer } from './types'
 import { inject, injectable } from 'inversify'
-import { IMapper } from '../mapper/types'
 import { TYPES, UPLOAD_FOLDER } from '../types'
-import { FiltersDesc, IStore } from '../store/store.types'
-import { ILogger } from '../logger/types'
+import { FiltersDesc } from '../../logic/store/store.types'
+import { ILogger } from '../../logic/logger/types'
 import { EnvVar, IEnvironment } from '../environment/environment.types'
-import { ALL_FACETS } from '../shared.types'
+import { APIEndpoints, IAPI } from '../shared.types'
 import { InvalidRequestException } from '../exceptions/InvalidRequestException'
 import multer from 'multer'
-import { IRunner } from '../fetcher/runner/types'
-import { IFileManager } from '../fs/fileManager.types'
 import path from 'path'
+import { LOGIC_TYPES } from '../../logic/types'
 
 const storage = multer.diskStorage({
 	destination: function (_req, _file, cb) { cb(null, UPLOAD_FOLDER) },
@@ -25,29 +23,20 @@ const upload = multer({ storage })
 
 @injectable()
 export class WebServer implements IWebServer {
-	private _mapper: IMapper
-	private _store: IStore
-	private _logger: ILogger
-	private _env: IEnvironment
-	private _runner: IRunner
-	private _fileManager: IFileManager
+	private logger: ILogger
+	private env: IEnvironment
+	private integration: IAPI
 
 	private _server: Server|null = null
 
 	constructor(
-		@inject(TYPES.IMapper) mapper: IMapper,
-		@inject(TYPES.IStore) store: IStore,
-		@inject(TYPES.ILogger) logger: ILogger,
+		@inject(LOGIC_TYPES.ILogger) logger: ILogger,
 		@inject(TYPES.IEnvironment) env: IEnvironment,
-		@inject(TYPES.IRunner) runner: IRunner,
-		@inject(TYPES.IFileManager) fileManager: IFileManager
+		@inject(LOGIC_TYPES.IIntegration) integration: IAPI,
 	) {
-		this._mapper = mapper
-		this._store = store
-		this._logger = logger
-		this._env = env
-		this._runner = runner
-		this._fileManager = fileManager
+		this.logger = logger
+		this.env = env
+		this.integration = integration
 	}
 
 	/**
@@ -61,52 +50,49 @@ export class WebServer implements IWebServer {
 		})
 
 		// shuts down the service.
-		app.get('/shutdown', (req: Request, res: Response) => {
+		app.get('/shutdown', (_: Request, res: Response) => {
 			res.status(200).send('Shutting down')
 			this.stop()
 		})
 
-		app.get('/transactions', (req: Request, res: Response) => {
+		app.get(`/${APIEndpoints.Transactions}`, (req: Request, res: Response) => {
 			const filters = (req.query.filters ? JSON.parse(req.query.filters as string) : {}) as FiltersDesc
-			const allTransactions = this._store.getTransactions(filters)
-			const from = req.query.from ? parseInt(req.query.from as string) : 0
-			const to = isNaN(parseInt(req.query.to as string)) ? allTransactions.length : parseInt(req.query.to as string)
-			res.status(200).send({ transactions: allTransactions.slice(from, to), totalCount: allTransactions.length })
+			const from = parseInt(req.query.from as string)
+			const to = parseInt(req.query.to as string)
+			res.status(200).send(this.integration.getTransactions(filters, from, to))
 		})
 
-		app.get('/mappings', (req: Request, res: Response) => {
-			res.status(200).json(this._mapper.getMappings())
+		app.get(`/${APIEndpoints.Mappings}`, (_: Request, res: Response) => {
+			res.status(200).json(this.integration.getMappings())
 		})
 
-		app.get('/facets', (req: Request, res: Response) => {
+		app.get(`/${APIEndpoints.Facets}`, (req: Request, res: Response) => {
 			const filters = (req.query.filters ? JSON.parse(req.query.filters as string) : {}) as FiltersDesc
-			res.status(200).json(this._store.getDistinctFacetValues(ALL_FACETS, filters))
+			res.status(200).json(this.integration.getFacets(filters))
 		})
 
-		app.post('/mappings', (req: Request, res: Response) => {
+		app.post(`/${APIEndpoints.Mappings}`, (req: Request, res: Response) => {
 			console.log(req.body)
 			const cateogryIndex = parseInt(req.query.index as string)
 			if (isNaN(cateogryIndex)) throw new InvalidRequestException('Required "index" argument"')
-			this._mapper.addMapping(req.body, cateogryIndex)
-			this._store.reProcessTransactions()
+			this.integration.addMapping(req.body, cateogryIndex)
 			res.status(200).send('ok')
 		})
 
-		app.post('/upload', upload.array('files', 20), async (req: Express.Request, res) => {
+		app.post(`/${APIEndpoints.AddFiles}`, upload.array('files', 20), async (req: Express.Request, res) => {
 			if(!req.files) {
+				this.logger.log('No files uploaded')
 				res.send({
 					status: false,
 					message: 'No file uploaded'
 				});
 				return
-			} 	
-			await this._runner.run(UPLOAD_FOLDER)
-			await this._fileManager.clearFolder(UPLOAD_FOLDER)
-			res.send({ processed: req.files.length })
+			}
+			this.logger.log('Uploading files')
+			await this.integration.addFiles(UPLOAD_FOLDER)
+			res.send({ processed: req.files.length }) // TODO - take from addFiles response
 		})
 
-		
-		
 		// if we got here we don't know this route. return 404.
 		app.all('*', function (req, res) {
 			res.status(404).send('unknown route')
@@ -118,12 +104,12 @@ export class WebServer implements IWebServer {
 	 */
 	private expressLogger = (req: Request, res: Response, next: NextFunction) => {
 		// log the incoming request
-		this._logger.log(`Incoming request:`, { path: req.path, method: req.method, query: req.query, body: req.body, headers: req.headers })
+		this.logger.log(`Incoming request:`, { path: req.path, method: req.method, query: req.query, body: req.body, headers: req.headers })
 		const start = new Date().getTime()
 		// hold the original send function.
 		const send = res.send
 
-		const logger = this._logger
+		const logger = this.logger
 		// create a new send function that logs the response.
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		res.send = function (body: any) {
@@ -155,7 +141,7 @@ export class WebServer implements IWebServer {
 	 */
 	init() {
 		const app = express()
-		const port = this._env.get(EnvVar.SERVER_PORT)
+		const port = this.env.get(EnvVar.SERVER_PORT)
 
 		app.use(this.expressLogger)
 		app.use(cors({
@@ -168,7 +154,7 @@ export class WebServer implements IWebServer {
 
 		return new Promise<void>((resolve) => {
 			this._server = app.listen(port, () => {
-				this._logger.log(`Express listening at http://localhost:${port}`)
+				this.logger.log(`Express listening at http://localhost:${port}`)
 				resolve()
 			})
 		})
@@ -179,12 +165,12 @@ export class WebServer implements IWebServer {
 	 */
 	public async stop() {
 		if (this._server) {
-			this._logger.log('Web server shutting down')
+			this.logger.log('Web server shutting down')
 			await new Promise((res) => {
 				try {
 					this._server && this._server.close(res)
 				} catch (err) {
-					this._logger.log('Error while shutting down', err)
+					this.logger.log('Error while shutting down', err)
 					process.exit(1)
 				}
 			})

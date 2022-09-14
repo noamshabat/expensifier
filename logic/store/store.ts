@@ -1,10 +1,9 @@
 import 'reflect-metadata'
 import { inject, injectable } from "inversify"
-import { RawTransaction } from "../fetcher/types"
-import { Facets, FiltersDesc, IStore } from "./store.types"
-import { TYPES } from '../types'
+import { FiltersDesc, IStore } from "./store.types"
 import { IMapper } from '../mapper/types'
-import { FacetKeys, Transaction } from '../shared.types'
+import { LOGIC_TYPES } from '../types'
+import { FacetKeys, Facets, RawTransaction, Transaction } from '../shared.types'
 
 type IStoreContents = { transactions: Transaction[] } 
 
@@ -12,7 +11,7 @@ type IStoreContents = { transactions: Transaction[] }
 export class Store implements IStore {
 	private mapper: IMapper
 	constructor(
-		@inject(TYPES.IMapper) mapper: IMapper,
+		@inject(LOGIC_TYPES.IMapper) mapper: IMapper,
 	) {
 		this.mapper = mapper;
 	}
@@ -36,6 +35,7 @@ export class Store implements IStore {
 	private filterTransaction(t: Transaction, filters: FiltersDesc): boolean {
 		for ( const key of Object.keys(filters)) {
 			const filter = filters[key as keyof FiltersDesc]
+			if (key === 'description' && filter && filter.length && t.description.toLowerCase().includes((filter[0] as string).toLowerCase())) continue
 			if (filter && filter.length && !filter.includes(t[key as keyof Transaction])) return false
 		}
 		return true

@@ -2,18 +2,22 @@ import { useTransactions } from "../hooks/useTransactions";
 import Paper from '@mui/material/Paper';
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, BarChart as ReBarChart } from "recharts";
 import { Views } from "../types";
-import { TransactionType } from '../shared.types'
+import { ALL_CATEGORIES, CategoryKeys, TransactionType } from '../shared.types'
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFacets } from "../hooks/useFacets";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useFilters } from "../context/FiltersContext";
+import Typography from "@mui/material/Typography";
 
 export function BarChart(p: { setView: (view:Views) => void }) {
     const { transactions, loading: transactionsLoading } = useTransactions()
     const { filteredFacets, loading: facetsLoading } = useFacets()
     const { setFilters } = useFilters()
     const [hoveredExpense, setHoveredExpense] = useState('')
+
+    const hoveredCategory = useRef('')
+    const setHoveredCategory = (cat: string) => hoveredCategory.current = cat
 
     if (facetsLoading || transactionsLoading) return <CircularProgress />
 
@@ -33,16 +37,18 @@ export function BarChart(p: { setView: (view:Views) => void }) {
         income: number,
     } | { [key: string]: number})[]
 
+    const byCategory = (categoryKey: CategoryKeys, monthName: string) => filteredFacets[categoryKey].reduce<{[key: string]: number}>((catAgg, cat) => {
+        catAgg[`${categoryKey}-${cat}`] = transactions.filter((f) => f.month === monthName && f.type === TransactionType.Expense && f[categoryKey] === cat)
+                                 .reduce<number>((last, curr) => last - curr.amount, 0)
+        return catAgg
+    }, {})
     const chartData = filteredFacets.month.reduce<ChartDataType>((agg, monthName) => {
         agg.push({
             month: monthName,
-            ...(
-                filteredFacets.category.reduce<{[key: string]: number}>((catAgg, cat) => {
-                    catAgg[cat] = transactions.filter((f) => f.month === monthName && f.type === TransactionType.Expense && f.category === cat)
-                                             .reduce<number>((last, curr) => last - curr.amount, 0)
-                    return catAgg
-                }, {})
-            ),
+            ...byCategory('category', monthName),
+            ...byCategory('category2', monthName),
+            ...byCategory('category3', monthName),
+            ...byCategory('category4', monthName),
             income: transactions.filter((f) => f.month === monthName && f.type === TransactionType.Income).reduce<number>((last, curr) => last + curr.amount, 0),
         })
         return agg
@@ -79,17 +85,20 @@ export function BarChart(p: { setView: (view:Views) => void }) {
                     offset={75}
                     content={(props) => {
                         if (!props.payload) return null
-                        const barExpense = props.payload.filter((i) => i.dataKey !== 'income').reduce((agg, i) => agg + (i.value as number || 0), 0)
+                        const cats = props.payload.filter((i) => typeof i.dataKey === 'string' && i.dataKey.startsWith(`${hoveredCategory.current}-`) || i.dataKey === 'income')
+                        if (cats.length === 0) return null
+
+                        const barExpense = cats.filter((i) => (i.dataKey as string) !== 'income').reduce((agg, i) => agg + (i.value as number || 0), 0)
                         return <Box sx={{ 
                                 display: 'flex',
                                 flexDirection: 'column-reverse',
-                                gap: '4px',
+                                gap: '0px',
                                 backgroundColor: 'white',
                                 border: 'solid 1px #5f5f5f',
                                 padding: '16px',
                                 borderRadius: '8px',
                             }}>
-                            <div style={{ 
+                            <Typography variant='caption' style={{ 
                                 display: 'flex', 
                                 gap: '20px',
                                 justifyContent: 'space-between',
@@ -98,19 +107,18 @@ export function BarChart(p: { setView: (view:Views) => void }) {
                             }}>
                                 <div>total expense</div>
                                 <div>{Math.round(barExpense * 100)/100}</div>
-                            </div>
-                            { props.payload?.map((i) => <>
-                                    <div style={{ 
+                            </Typography>
+                            { cats.map((i) => <>
+                                    <Typography variant='caption' sx={{ 
                                         display: 'flex', 
-                                        gap: '20px',
                                         justifyContent: 'space-between',
                                         color: (i as { fill:string}).fill,
                                         backgroundColor: i.dataKey === hoveredExpense ? '#dfdfdf' : 'transparent',
                                         fontWeight: i.dataKey === hoveredExpense || i.dataKey === 'income' ? 'bold' : 'normal',
                                     }}>
-                                        <div>{i.dataKey}</div>
+                                        <div>{(i.dataKey as string).replace(`${hoveredCategory.current}-`,'')}</div>
                                         <div>{i.value}</div>
-                                    </div>
+                                    </Typography>
                                     { i.dataKey === 'income' && <div style={{ width: '100%', height: '1px', backgroundColor: '#dfdfdf', margin: '6px 0px'}} />}
                                 </>
                             )}
@@ -124,28 +132,30 @@ export function BarChart(p: { setView: (view:Views) => void }) {
                     stackId="income"
                 />
                 {
-                    Object.keys(chartData[0]).filter((key) => !['month','income', 'expense'].includes(key)).map((cat, ix) => {
-                        return <Bar
-                            onMouseOver={() => setHoveredExpense(cat)}
-                            onMouseOut={() => setHoveredExpense('')}
-                            style={{cursor: 'hand'}}
-                            key={cat}
-                            dataKey={cat}
-                            fill={colorArray[ix % colorArray.length]}
-                            stackId="expense"
-                            onClick={(data) => {
-                                setFilters({ category: [cat], month: [data.month] })
-                                setTimeout(() => p.setView(Views.List), 0)
-                            }}
-                        />
+                    ALL_CATEGORIES.map((categoryKey) => {
+                        return Object.keys(chartData[0]).filter((key) => key.startsWith(`${categoryKey}-`)).map((cat, ix) => {
+                            const catName = cat.replace(`${categoryKey}-`, '')
+                            return <Bar
+                                onMouseOver={() => { setHoveredExpense(cat); setHoveredCategory(categoryKey) }}
+                                onMouseOut={() => { setHoveredExpense(''); setHoveredCategory('') }}
+                                style={{cursor: 'hand'}}
+                                key={cat}
+                                dataKey={cat}
+                                fill={colorArray[ix % colorArray.length]}
+                                stackId={`${categoryKey}-expense`}
+                                onClick={(data) => {
+                                    setFilters({ [categoryKey]: [catName], month: [data.month] })
+                                    setTimeout(() => p.setView(Views.List), 0)
+                                }}
+                            />
+                        })
                     })
                 }
-                
-                
             </ReBarChart>
             <Box sx={{display: 'flex', gap: '25px', justifyContent: 'center'}} >
                 <div style={{ color: '#463edb'}}>Total Income: {Math.round(totalIncome * 100) / 100}</div>
                 <div style={{ color: 'red'}}>Total Expense: {Math.round(totalExpense * 100) / 100}</div>
+                <div style={{ color: 'green'}}>Total Balance: {Math.round(totalIncome * 100) / 100 - Math.round(totalExpense * 100) / 100}</div>
             </Box>
         </Paper>
       );

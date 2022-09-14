@@ -1,28 +1,32 @@
 import 'reflect-metadata'
-import { injectable } from 'inversify'
-import {readFileSync, writeFileSync} from "fs"
-import { IMapper, Mapping } from "./types"
-import { RawTransaction } from '../fetcher/types'
-import { UNDEFINED_CATEGORY } from '../shared.types'
+import { inject, injectable } from 'inversify'
+import { IMapper } from "./types"
+import { Mapping, RawTransaction, UNDEFINED_CATEGORY } from '../shared.types'
+import { AppFiles, IFileManager } from '../fs/fileManager.types'
+import { LOGIC_TYPES } from '../types'
 
 @injectable()
 export class Mapper implements IMapper {
+    private fileMgr: IFileManager
     private mappings: Mapping[][] = [[], [], [], []]
-    constructor() {
+
+    constructor(
+        @inject(LOGIC_TYPES.IFileManager) fileMgr: IFileManager
+    ) {
+        this.fileMgr = fileMgr
         this.loadMappings()
     }
 
-    loadMappings() {
-        const fileContents = readFileSync(`${__dirname}/data/mappings.json`).toString()
-        this.mappings = JSON.parse(fileContents)
+    async loadMappings() {
+        this.mappings = await this.fileMgr.fileAsJson<Mapping[][]>(AppFiles.Mappings)
     }
 
     getMappings() {
         return this.mappings
     }
     
-    setMappings(data: Mapping[][]) {
-        writeFileSync(`${__dirname}/data/mappings.json`, JSON.stringify(data,null,'\t'))
+    setMappings(data: Mapping[][]): Promise<void> {
+        return this.fileMgr.writeJsonToFile(AppFiles.Mappings, data)
     }
 
     addMapping(mapping: Mapping, categoryIndex: number) {
