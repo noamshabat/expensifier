@@ -17,6 +17,7 @@
     "@types/react-dom": "^17.0.2",
     "cors": "^2.8.5",
     "exceljs": "^4.3.0",
+    "expensifier-logic": "file:logic",
     "express": "^4.18.1",
     "inversify": "^6.0.1",
     "moment": "^2.29.3",
@@ -25,21 +26,19 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-scripts": "5.0.1",
     "recharts": "^2.1.10",
     "reflect-metadata": "^0.1.13",
-    "typescript": "^4.6.4",
     "underscore": "^1.13.4",
+    "uuid": "^9.0.0",
     "web-vitals": "^2.1.4",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.8/xlsx-0.18.8.tgz"
   },
   "scripts": {
     "server": "nodemon --ignore ./data --exec npx ts-node -- --files ./server/index.ts",
     "build-server": "tsc -b ./server/tsconfig.json",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "webpack watch",
+    "build": "webpack",
+    "test": "echo 'not implemented'",
     "copy-shared": "nodemon -w ./shared/types.ts --exec ./copy-shared"
   },
   "eslintConfig": {
@@ -65,11 +64,21 @@
     "@types/cors": "^2.8.12",
     "@types/multer": "^1.4.7",
     "@types/underscore": "^1.11.4",
+    "@types/uuid": "^8.3.4",
+    "@types/xlsx": "^0.0.36",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
+    "copy-webpack-plugin": "^11.0.0",
+    "dotenv": "^16.0.3",
     "eslint": "^8.17.0",
     "http-server": "^14.1.1",
     "nodemon": "^2.0.16",
-    "ts-node": "^10.7.0"
+    "ts-loader": "^9.4.1",
+    "ts-node": "^10.7.0",
+    "tsconfig-paths-webpack-plugin": "^4.0.0",
+    "typescript": "^4.8.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "worker-loader": "^3.0.8"
   }
 }

@@ -3,7 +3,7 @@ import { WorkBook, WorkSheet } from "xlsx"
 
 export interface IExcelProcessor {
     loadFile: (path: string) => Promise<WorkBook>
-    loadFolder: (path: string) => Promise<WorkBook[]>
+    loadFiles: (files: { name: string }[]) => Promise<WorkBook[]>
     
     cellValue: (sheet: WorkSheet, row: number, col: number) => string
     cellCurrencyValue: (sheet: WorkSheet, row: number, col: number) => number

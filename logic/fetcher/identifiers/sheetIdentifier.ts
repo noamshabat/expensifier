@@ -56,6 +56,7 @@ export class SheetIdentifier {
             billDate: [],
             amount: [],
         }
+        this.init()
     }
 
     private async loadSheetGuide() {

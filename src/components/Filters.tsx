@@ -19,7 +19,7 @@ const FacetColors: {[key in keyof Facets]?: InputBaseProps["color"]} = {
 
 export function GenericFilterWrapper(props: { name: keyof Transaction, facets: Facets, loading: boolean }) {
     const { filters, setFilters } = useFilters()
-    const names = props.facets[props.name as keyof Facets]
+    const names = props.facets[props.name as keyof Facets] || []
 
     const setFilter = (newFilter: Filterable[]) => {
         setFilters({ [props.name]: newFilter})

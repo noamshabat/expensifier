@@ -46,7 +46,7 @@ export class Store implements IStore {
 		const facets = req.reduce<Facets>((currFacets, key) => {
 			currFacets[key] = []
 			return currFacets
-		}, {})
+		}, {} as Facets)
 		// build the facet array
 		return this._store.transactions.reduce<Facets>((currFacets, t) => {
 			if (this.filterTransaction(t, filters))  {

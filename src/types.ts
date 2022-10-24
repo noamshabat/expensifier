@@ -1,4 +1,3 @@
-import { Transaction } from './shared.types'
 
 export const enum Views {
     List='List',
@@ -6,8 +5,3 @@ export const enum Views {
 }
 
 export type Filterable = string|number
-
-export type TransactionQueryResponse = {
-    transactions: Transaction[],
-    totalCount: number,
-}

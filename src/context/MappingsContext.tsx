@@ -1,5 +1,5 @@
 import { useMemo, createContext, useState, useContext, useEffect } from "react"
-import { addMapping, getMappings } from "../api"
+import API from "../api/"
 import { CategoryKeys, Mapping } from "../shared.types"
 
 type MappingContext = { 
@@ -17,7 +17,7 @@ export const MappingContext: React.FC<React.PropsWithChildren<unknown>> = (props
     useEffect(() => { fetch() }, [])
 
     const fetch = async () => {
-        const res = await getMappings()
+        const res = await API.getMappings()
         setMappings({
             category: res[0],
             category2: res[1],
@@ -27,7 +27,7 @@ export const MappingContext: React.FC<React.PropsWithChildren<unknown>> = (props
     }
 
     const setMappingApi = async (category: string, rule: string, id: CategoryKeys) => {
-        await addMapping({ categoryName: category, regex: rule }, CategoryKeyToIndex[id])
+        await API.addMapping({ mapping:{ categoryName: category, regex: rule }, categoryIndex: CategoryKeyToIndex[id] })
         await fetch()
     }
 

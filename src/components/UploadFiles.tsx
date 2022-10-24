@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { ChangeEvent, memo } from "react";
-import { addFiles } from "../api";
+import API from "../api/";
 import { useNotifyUpdate } from "../context/RefetchContext";
 
 function _UploadFiles() {
@@ -8,7 +8,7 @@ function _UploadFiles() {
     
     const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
-            addFiles(event.target.files).then(notifyUpdateRequired)
+            API.addFiles({ files: event.target.files }).then(notifyUpdateRequired).catch(console.error)
         }
     };
 

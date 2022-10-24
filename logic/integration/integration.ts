@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { inject, injectable } from "inversify";
-import { AddFilesResponse, ALL_FACETS, FiltersDesc, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping } from "../shared.types";
+import { ALL_FACETS, FiltersDesc, IAPI, Mapping } from "../shared.types";
 import { IStore } from "../store/store.types";
 import { IRunner } from '../fetcher/runner/types';
 import { IFileManager } from '../fs/fileManager.types';
@@ -26,29 +26,29 @@ export class Integration implements IAPI {
         this.fileManager = fileManager
     }
 
-    getTransactions(filters: FiltersDesc, fromIn?: number, toIn?: number): GetTransactionsResponse {
-        const allTransactions = this.store.getTransactions(filters)
-		const from = fromIn || 0
-        const to = toIn || allTransactions.length
-        return { transactions: allTransactions.slice(from, to), totalCount: allTransactions.length }
+    getTransactions(p:{ filters: FiltersDesc, from?: number, to?: number }) {
+        const allTransactions = this.store.getTransactions(p.filters)
+		const from = p.from || 0
+        const to = p.to || allTransactions.length
+        return Promise.resolve({ transactions: allTransactions.slice(from, to), totalCount: allTransactions.length })
     }
 
-    getMappings() : GetMappingsResponse {
-        return this.mapper.getMappings()
+    getMappings() {
+        return Promise.resolve(this.mapper.getMappings())
     }
 
-    getFacets(filters: FiltersDesc): GetFacetsResponse {
-        return this.store.getDistinctFacetValues(ALL_FACETS, filters)
+    getFacets(p: { filters: FiltersDesc }) {
+        return Promise.resolve(this.store.getDistinctFacetValues(ALL_FACETS, p.filters))
     }
 
-    addMapping(mapping: Mapping, categoryIndex: number) {
-        this.mapper.addMapping(mapping, categoryIndex)
+    addMapping(p: { mapping: Mapping, categoryIndex: number }) {
+        this.mapper.addMapping(p.mapping, p.categoryIndex)
         this.store.reProcessTransactions()
+        return Promise.resolve()
     }
 
-    async addFiles(folder: string): AddFilesResponse {
-        await this.runner.run(folder)
-		await this.fileManager.clearFolder(folder)
-		return { processed: 0 } // TODO
+    async addFiles(p: { files: FileList }) {
+        await this.runner.run(Array.from(p.files) as unknown as { name: string }[])
+		return Promise.resolve({ processed: 0 }) 
     }
 }

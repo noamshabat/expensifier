@@ -5,15 +5,18 @@ import cors from 'cors'
 import { ServiceException } from '../exceptions/ServiceException'
 import { IWebServer } from './types'
 import { inject, injectable } from 'inversify'
-import { TYPES, UPLOAD_FOLDER } from '../types'
+import { TYPES } from '../types'
 import { FiltersDesc } from '../../logic/store/store.types'
 import { ILogger } from '../../logic/logger/types'
 import { EnvVar, IEnvironment } from '../environment/environment.types'
-import { APIEndpoints, IAPI } from '../shared.types'
+import { APIEndpoints, IAPI, Mapping } from '../shared.types'
 import { InvalidRequestException } from '../exceptions/InvalidRequestException'
 import multer from 'multer'
 import path from 'path'
 import { LOGIC_TYPES } from '../../logic/types'
+import { IFileManager } from '../../logic/fs/fileManager.types'
+
+const UPLOAD_FOLDER = process.env.UPLOAD_FOLDER as string
 
 const storage = multer.diskStorage({
 	destination: function (_req, _file, cb) { cb(null, UPLOAD_FOLDER) },
@@ -26,6 +29,7 @@ export class WebServer implements IWebServer {
 	private logger: ILogger
 	private env: IEnvironment
 	private integration: IAPI
+	private fileMgr: IFileManager
 
 	private _server: Server|null = null
 
@@ -33,10 +37,12 @@ export class WebServer implements IWebServer {
 		@inject(LOGIC_TYPES.ILogger) logger: ILogger,
 		@inject(TYPES.IEnvironment) env: IEnvironment,
 		@inject(LOGIC_TYPES.IIntegration) integration: IAPI,
+		@inject(LOGIC_TYPES.IFileManager) fileMgr: IFileManager,
 	) {
 		this.logger = logger
 		this.env = env
 		this.integration = integration
+		this.fileMgr = fileMgr
 	}
 
 	/**
@@ -55,27 +61,27 @@ export class WebServer implements IWebServer {
 			this.stop()
 		})
 
-		app.get(`/${APIEndpoints.Transactions}`, (req: Request, res: Response) => {
+		app.get(`/${APIEndpoints.Transactions}`, async (req: Request, res: Response) => {
 			const filters = (req.query.filters ? JSON.parse(req.query.filters as string) : {}) as FiltersDesc
 			const from = parseInt(req.query.from as string)
 			const to = parseInt(req.query.to as string)
-			res.status(200).send(this.integration.getTransactions(filters, from, to))
+			res.status(200).send(await this.integration.getTransactions({filters, from, to}))
 		})
 
-		app.get(`/${APIEndpoints.Mappings}`, (_: Request, res: Response) => {
-			res.status(200).json(this.integration.getMappings())
+		app.get(`/${APIEndpoints.Mappings}`, async (_: Request, res: Response) => {
+			res.status(200).json(await this.integration.getMappings())
 		})
 
-		app.get(`/${APIEndpoints.Facets}`, (req: Request, res: Response) => {
+		app.get(`/${APIEndpoints.Facets}`, async (req: Request, res: Response) => {
 			const filters = (req.query.filters ? JSON.parse(req.query.filters as string) : {}) as FiltersDesc
-			res.status(200).json(this.integration.getFacets(filters))
+			res.status(200).json(await this.integration.getFacets({filters}))
 		})
 
-		app.post(`/${APIEndpoints.Mappings}`, (req: Request, res: Response) => {
+		app.post(`/${APIEndpoints.Mappings}`, async (req: Request, res: Response) => {
 			console.log(req.body)
-			const cateogryIndex = parseInt(req.query.index as string)
-			if (isNaN(cateogryIndex)) throw new InvalidRequestException('Required "index" argument"')
-			this.integration.addMapping(req.body, cateogryIndex)
+			const categoryIndex = parseInt(req.query.index as string)
+			if (isNaN(categoryIndex)) throw new InvalidRequestException('Required "index" argument"')
+			await this.integration.addMapping({ mapping: req.body as Mapping, categoryIndex })
 			res.status(200).send('ok')
 		})
 
@@ -89,7 +95,14 @@ export class WebServer implements IWebServer {
 				return
 			}
 			this.logger.log('Uploading files')
-			await this.integration.addFiles(UPLOAD_FOLDER)
+			const files = await this.fileMgr.readdir(UPLOAD_FOLDER)
+        
+			// chose to use 'unknown' as FileList to allow using the same API type on client and server.
+			await this.integration.addFiles({ files: files.map((f) => ({ name: `${f}` })) as unknown as FileList})
+			
+			// clear upload folder after upload
+			await this.fileMgr.clearFolder(UPLOAD_FOLDER)
+		
 			res.send({ processed: req.files.length }) // TODO - take from addFiles response
 		})
 

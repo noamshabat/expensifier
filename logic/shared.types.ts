@@ -72,17 +72,17 @@ export const enum Methods {
 }
 
 export type FiltersDesc = { [key in keyof Partial<Transaction>]: unknown[] }
-export type Facets = { [key in FacetKeys]?: string[] }
+export type Facets = { [key in FacetKeys]: string[] }
 
 export type GetTransactionsResponse = { transactions: Transaction[], totalCount: number }
 export type GetMappingsResponse = Mapping[][]
 export type GetFacetsResponse = Facets
-export type AddFilesResponse = Promise<{ processed: number }>
+export type AddFilesResponse = { processed: number }
 
 export interface IAPI {
-    [APIs.GetTransactions]: (filters: FiltersDesc, from?: number, to?: number) => GetTransactionsResponse
-    [APIs.GetMappings]: () => GetMappingsResponse
-    [APIs.GetFacets]: (filters: FiltersDesc) => GetFacetsResponse
-    [APIs.AddMapping]: (mapping: Mapping, categoryIndex: number) => void
-    [APIs.AddFiles]: (folder: string) => AddFilesResponse
+    [APIs.GetTransactions]: (p: {filters: FiltersDesc, from?: number, to?: number}) => Promise<GetTransactionsResponse>
+    [APIs.GetMappings]: () => Promise<GetMappingsResponse>
+    [APIs.GetFacets]: (p:{filters: FiltersDesc}) => Promise<GetFacetsResponse>
+    [APIs.AddMapping]: (p:{mapping: Mapping, categoryIndex: number}) => Promise<void>
+    [APIs.AddFiles]: (p:{files: FileList}) => Promise<AddFilesResponse>
 }

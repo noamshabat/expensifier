@@ -5,7 +5,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "lib": ["ES2020", "DOM"],
-    "outDir": "../dist/logic",
+    "outDir": "./dist",
     "downlevelIteration": true,
     "typeRoots": ["./types"],
     "sourceMap": true,

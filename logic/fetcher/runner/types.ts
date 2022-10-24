@@ -1,4 +1,4 @@
 
 export interface IRunner {
-    run: (path: string) => Promise<void>
+    run: (filer: { name: string }[]) => Promise<void>
 }

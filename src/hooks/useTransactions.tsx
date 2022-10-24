@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
-import * as API from "../api"
+import API from "../api/"
 import { useFilters } from "../context/FiltersContext"
 import { useMappings } from "../context/MappingsContext"
-import { Transaction } from "../shared.types"
-import { TransactionQueryResponse } from "../types"
+import { Transaction, GetTransactionsResponse } from "../shared.types"
 
 export function useTransactions(batchSize?: number) {
     const { mappings } = useMappings()
@@ -20,7 +19,7 @@ export function useTransactions(batchSize?: number) {
         const to = batchSize ? (transactionsIn.length + (refetch ? 0 : batchSize)) : undefined
 
         setLoading(true)
-        const res: TransactionQueryResponse = await API.getTransactions(filters, from, to)
+        const res: GetTransactionsResponse = await API.getTransactions({filters, from, to})
         setTotal(res.totalCount)
         setTransactions(refetch ? res.transactions : [...transactionsIn, ...res.transactions]);
         setLoading(false);

@@ -5,4 +5,5 @@ export interface IMapper {
     setMappings: (mappings: Mapping[][]) => Promise<void>
     getCategory: (t: RawTransaction, categoryIndex: number) => string
     addMapping: (mapping: Mapping, categoryIndex: number) => void
+    loadMappings: () => void
 }

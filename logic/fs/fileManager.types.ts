@@ -5,7 +5,7 @@ export interface IFileManager {
     writeJsonToFile(file: AppFiles, data: unknown): Promise<void>
     exists(file: AppFiles): Promise<boolean>
     readdir(path: string): Promise<string[]>
-    readfile(path: string): Promise<ArrayBuffer>
+    readUploadedFile(name: string): Promise<ArrayBuffer>
 }
 
 export const enum AppFiles {

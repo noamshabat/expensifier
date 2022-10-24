@@ -1,11 +1,14 @@
 import 'reflect-metadata'
 import { inject, injectable } from 'inversify';
-import { read, WorkBook, WorkSheet } from 'xlsx'
+import { read, WorkBook, WorkSheet, set_cptable } from 'xlsx'
+const cptable = require('xlsx/dist/cpexcel');
 import { IExcelProcessor } from './excelProcessor.types';
 import { ILogger } from '../../logger/types';
 import moment from 'moment';
 import { IFileManager } from '../../fs/fileManager.types';
 import { LOGIC_TYPES } from '../../types';
+
+set_cptable(cptable);
 
 @injectable()
 export class ExcelProcessor implements IExcelProcessor {
@@ -95,7 +98,7 @@ export class ExcelProcessor implements IExcelProcessor {
         let workbook
         console.log('loading file ' + path)
         try {
-            const data = await this.fileMgr.readfile(path)
+            const data = await this.fileMgr.readUploadedFile(path)
             workbook = read(data, { raw: true })
         } catch (err) {
             console.log('Failed loading file', err)
@@ -106,11 +109,10 @@ export class ExcelProcessor implements IExcelProcessor {
         return workbook
     }
 
-    loadFolder = async (path: string): Promise<WorkBook[]> => {
-        const files = await this.fileMgr.readdir(path)
+    loadFiles = async (files: { name: string }[]): Promise<WorkBook[]> => {
         console.log('files', files)
         //listing all files using forEach
-        const xlsx = files.filter((file) => file.endsWith('.xlsx') || file.endsWith('.xls'));
-        return Promise.all(xlsx.map((file) => this.loadFile(path + file)))
+        const xlsx = files.filter((file) => file.name.endsWith('.xlsx') || file.name.endsWith('.xls'));
+        return Promise.all(xlsx.map((file) => this.loadFile(file.name)))
     }
 }

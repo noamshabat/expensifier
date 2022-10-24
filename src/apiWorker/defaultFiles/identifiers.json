@@ -1,0 +1,35 @@
+[
+    {
+        "name": "Limor Mastercard",
+        "accountType": "Credit Card",
+        "identifiers": [
+            { "row": 2, "column": 1, "value": "הרפז לימור" },
+            { "row": 4, "column": 1, "value": "גולד - מסטרקארד - 7146" }
+        ]
+    },
+    {
+        "name": "בנק דיסקונט כרטיסי אשראי",
+        "accountType": "Credit Card",
+        "identifiers": [
+            { "row": 1, "column": 1, "value": "כרטיסי אשראי" },
+            { "row": 7, "column": 1, "value": "פירוט עסקאות - כל הכרטיסים הבנקאיים" }
+        ]
+    },
+    {
+        "name": "בנק דיסקונט עובר ושב",
+        "accountType": "Checking Account",
+        "identifiers": [
+            { "row": 1, "column": 1, "value": "עובר ושב" },
+            { "row": 7, "column": 1, "value": "תנועות אחרונות" }
+        ]
+    },
+    {
+        "name": "כרטיס אשראי כ.א.ל",
+        "accountType": "Credit Card",
+        "identifiers": [
+            { "row": 3, "column": 1, "value": "תאריך העסקה" },
+            { "row": 3, "column": 2, "value": "שם בית העסק" },
+            { "row": 3, "column": 3, "value": "סכום העסקה" }
+        ]
+    }
+]

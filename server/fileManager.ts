@@ -46,9 +46,7 @@ export class FileManager implements IFileManager {
         return readdir(path)
     }
 
-    async readfile(path: string): Promise<ArrayBuffer> {
-        return (await readFile(path)).buffer
+    async readUploadedFile(name: string): Promise<ArrayBuffer> {
+        return (await readFile(`${process.env.UPLOAD_FOLDER}${name}`)).buffer
     }
 }
-
-

@@ -83,9 +83,8 @@ export class Runner implements IRunner {
         }
     }
 
-    public run = async (path: string) => {
-        console.log('processing', path);
-        (await this.excelProcessor.loadFolder(path)).forEach((w) => {
+    public run = async (files: { name: string }[]) => {
+        (await this.excelProcessor.loadFiles(files)).forEach((w) => {
             Object.values(w.Sheets).forEach((s) => this.process(s))
         })
     }

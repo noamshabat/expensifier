@@ -11,6 +11,19 @@
         "program": "${workspaceFolder}/server/index.ts",
         "preLaunchTask": "npm: build-server",
         "outFiles": ["${workspaceFolder}/dist/server/**/*.js"]
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "build",
+        "program": "${workspaceFolder}/build.js",
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "craco start",
+        "program": "${workspaceFolder}/node_modules/@craco/craco/scripts/start",
+        "args": ["start"]
       }
     ]
   }

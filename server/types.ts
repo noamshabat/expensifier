@@ -3,5 +3,3 @@ export const TYPES = {
     IServer: Symbol.for('IServer'),
     IEnvironment: Symbol.for('IEnvironment'),
 }
-
-export const UPLOAD_FOLDER='uploads/'

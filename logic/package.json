@@ -1,0 +1,10 @@
+{
+    "name": "expensifier-logic",
+    "version": "1.0.0",
+    "description": "expensifier-logic",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+      "/dist"
+    ]
+}

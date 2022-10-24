@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import * as API from "../api"
+import API from "../api/"
 import { useFilters } from "../context/FiltersContext"
 import { useNotifyUpdate } from "../context/RefetchContext"
 
@@ -48,12 +48,12 @@ export function useFacets() {
     const [loading, setLoading] = useState(true)
     const { lastUpdate } = useNotifyUpdate()
   
-    useEffect(() => { API.getFacets({}).then(setFacets) }, [lastUpdate])
+    useEffect(() => { API.getFacets({filters:{}}).then(setFacets) }, [lastUpdate])
     useEffect(() => { fetch() }, [filters, lastUpdate])
 
     const fetch = async () => {
         setLoading(true)
-        const facets = await API.getFacets(filters)
+        const facets = await API.getFacets({filters})
         setFilteredFacets(facets)
         setLoading(false)
     }
