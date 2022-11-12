@@ -4,14 +4,16 @@
   "exclude": ["node_modules", "**/*.spec.ts"],
   "compilerOptions": {
     "experimentalDecorators": true,
-    "lib": ["dom", "ES7"],
+    "lib": ["ES2022"],
     "outDir": "../dist/server",
     "downlevelIteration": true,
+    "types": ["node"],
     "typeRoots": ["./types"],
     "sourceMap": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "composite": true
+    "composite": true,
+    "noUnusedLocals": true
   },
   "references": [
      {"path": "../logic"}

@@ -1,7 +1,7 @@
-import { ApiMessage, ApiMessageResponse } from "./api.types";
+import { ApiMessage, ApiMessageBase } from "./api.types";
 import { processWorkerMessage } from "./apiEntry.worker";
 
-type ListenerCallback = (data: MessageEvent<any>) => void
+type ListenerCallback = (data: MessageEvent<ApiMessageBase>) => void
 
 export class FakeWorker {
     private listeners: { 

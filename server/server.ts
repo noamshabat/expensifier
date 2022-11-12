@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { inject, injectable } from "inversify";
 import { ILogger } from "../logic/logger/types";
-import { TYPES, UPLOAD_FOLDER } from "./types";
+import { TYPES } from "./types";
 import { IWebServer } from './webserver/types';
 import { IEnvironment } from './environment/environment.types';
 import { IRunner } from '../logic/fetcher/runner/types';
@@ -9,6 +9,7 @@ import { IFileManager } from '../logic/fs/fileManager.types';
 import { ISheetIdentifier } from '../logic/fetcher/identifiers/identifier.types';
 import { LOGIC_TYPES } from '../logic/types';
 
+const UPLOAD_FOLDER = 'uploads'
 @injectable()
 export class Server {
     constructor(

@@ -1,3 +1,4 @@
+import { AppFiles } from "../shared.types"
 
 export interface IFileManager {
     clearFolder(path: string): Promise<void>
@@ -6,10 +7,4 @@ export interface IFileManager {
     exists(file: AppFiles): Promise<boolean>
     readdir(path: string): Promise<string[]>
     readUploadedFile(name: string): Promise<ArrayBuffer>
-}
-
-export const enum AppFiles {
-    DataColumnOptions='baseDataColumnOptions.json',
-    Identifiers='identifiers.json',
-    Mappings='mappings.json',
 }

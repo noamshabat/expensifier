@@ -1,4 +1,5 @@
-import { AppFiles, IFileManager } from "expensifier-logic/fs/fileManager.types";
+import { AppFiles } from "expensifier-logic/dist/shared.types";
+import { IFileManager } from "expensifier-logic/fs/fileManager.types";
 import { injectable } from "inversify";
 import { CreatesWritable } from "./fileMgr.types";
 
@@ -16,7 +17,7 @@ export class FileManager implements IFileManager {
         }
         
     }
-    clearFolder(path: string): Promise<void> {
+    clearFolder(_path: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
     async fileAsJson<T>(file: AppFiles): Promise<T> {
@@ -61,7 +62,7 @@ export class FileManager implements IFileManager {
             return false
         }
     }
-    readdir(path: string): Promise<string[]> {
+    readdir(_path: string): Promise<string[]> {
         throw new Error("Method not implemented.");
     }
     async readUploadedFile(name: string): Promise<ArrayBuffer> {

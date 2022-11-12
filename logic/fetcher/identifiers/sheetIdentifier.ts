@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { WorkSheet } from "xlsx";
-import { AppFiles, IFileManager } from "../../fs/fileManager.types";
+import { IFileManager } from "../../fs/fileManager.types";
 import { ILogger } from "../../logger/types";
-import { TransactionBaseData } from "../../shared.types";
+import { AppFiles, TransactionBaseData } from "../../shared.types";
 import { LOGIC_TYPES } from "../../types";
 import { IExcelProcessor } from "../excel/excelProcessor.types";
 import { BaseDataColumnOptions, CellIdentifiers, EnhancedSheetGuide, IDateFormatAnalyzer, SheetGuide } from "./identifier.types";

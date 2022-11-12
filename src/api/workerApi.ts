@@ -1,7 +1,7 @@
 // import ApiWorker from 'worker-loader!../apiWorker/apiEntry.worker';
 import ApiWorker from '../apiWorker/fakeWorker';
 import { ApiMessage, ApiMessageResponse, API_WORKER_MESSAGE_IDENTIFIER } from '../apiWorker/api.types';
-import { AddFilesResponse, APIs, FiltersDesc, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping } from '../shared.types';
+import { AddFilesResponse, APIs, AppFiles, FiltersDesc, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping } from '../shared.types';
 import { v4 as uuid} from 'uuid'
 import { CreatesWritable } from '../apiWorker/fileMgr.types';
 
@@ -14,7 +14,7 @@ export class WorkerApi implements IAPI {
         this.worker.addEventListener('error', this.error)
         this.worker.addEventListener('messageerror', this.messageError)
     }
-    
+	
     private onMessage = (event: MessageEvent) => {
         console.log('Received message', event.data.type, event.data)
         const data = event.data as ApiMessageResponse
@@ -68,4 +68,7 @@ export class WorkerApi implements IAPI {
         }
         return this.postMessage({type: APIs.AddFiles, args: {files: apiFiles as unknown as FileList} }) as Promise<AddFilesResponse>
     }
+
+	getConfigFile  = async (p: { file: AppFiles; }) => this.postMessage({ type: APIs.GetConfigFile, args: p}) as Promise<object>
+	setConfigFile  = async (p: { file: AppFiles, data: unknown }) => this.postMessage({ type: APIs.SetConfigFile, args: p}) as Promise<void>
 }

@@ -7,12 +7,14 @@
     "lib": ["ES2020", "DOM"],
     "outDir": "./dist",
     "downlevelIteration": true,
+    "types": ["webpack-env"],
     "typeRoots": ["./types"],
     "sourceMap": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "composite": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "noUnusedLocals": true
   },
 }

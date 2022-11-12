@@ -9,10 +9,14 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
+  "parserOptions": {
+    "project": ["./tsconfig.json", "./server/tsconfig.json", "./logic/tsconfig.json"]
+  },
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "warn", // or error
-      { 
+      {
+        "ignoreRestSiblings": false,
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_"
       }

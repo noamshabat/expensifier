@@ -1,4 +1,10 @@
 
+export enum AppFiles {
+    DataColumnOptions='baseDataColumnOptions.json',
+    Identifiers='identifiers.json',
+    Mappings='mappings.json',
+}
+
 export type Mapping = {
     categoryName: string
     regex: string
@@ -62,7 +68,9 @@ export const enum APIs {
     GetMappings='getMappings',
     AddMapping='addMapping',
     GetFacets='getFacets',
-    AddFiles='addFiles'
+    AddFiles='addFiles',
+	GetConfigFile='getConfigFile',
+	SetConfigFile='setConfigFile',
 }
 
 export const enum Methods {
@@ -84,4 +92,6 @@ export interface IAPI {
     [APIs.GetFacets]: (p:{filters: FiltersDesc}) => Promise<GetFacetsResponse>
     [APIs.AddMapping]: (p:{mapping: Mapping, categoryIndex: number}) => Promise<void>
     [APIs.AddFiles]: (p:{files: FileList}) => Promise<AddFilesResponse>
+	[APIs.GetConfigFile]: (p:{file: AppFiles}) => Promise<object>
+	[APIs.SetConfigFile]: (p:{file: AppFiles, data: unknown}) => Promise<void>
 }

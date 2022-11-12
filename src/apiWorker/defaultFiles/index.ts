@@ -1,4 +1,4 @@
-import { AppFiles } from "expensifier-logic/fs/fileManager.types";
+import { AppFiles } from '../../shared.types'
 import dataColumnOptions from './baseDataColumnOptions.json'
 import identifiers from './identifiers.json'
 import mappings from './mappings.json'

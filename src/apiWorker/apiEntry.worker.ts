@@ -20,6 +20,8 @@ export async function processWorkerMessage(id: string, message: ApiMessage): Pro
         case APIs.GetFacets: return {id, type: message.type, data: await integration[message.type](message.args)}
         case APIs.AddMapping: return {id, type: message.type, data: await integration[message.type](message.args)}
         case APIs.AddFiles: return {id, type: message.type, data: await integration[message.type](message.args)}
+		case APIs.GetConfigFile: return {id, type: message.type, data: await integration[message.type](message.args)}
+		case APIs.SetConfigFile: return {id, type: message.type, data: await integration[message.type](message.args)}
     }
 }
 
@@ -36,5 +38,4 @@ self.addEventListener('message', evt => {
         console.log('Failed processing message', evt, err)
     }
     console.log(new Date())
-    
 })

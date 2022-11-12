@@ -9,6 +9,7 @@ import { ViewSelector } from './components/ViewSelector';
 import { log } from './utils';
 import { ALL_FACETS } from './shared.types';
 import { UploadFiles } from './components/UploadFiles';
+import { ExportFiles, ImportFiles } from './components/ExportFiles';
 
 function App() {
   const [ view, setView ] = useState<Views>(Views.List)
@@ -31,6 +32,8 @@ function App() {
         <UploadFiles />
         <UndoRedo view={view} setView={setView} />
         <ViewSelector view={view} setView={setView} />
+		<ExportFiles />
+		<ImportFiles />
       </Stack>
       <Filters filters={ALL_FACETS} />
       <Box ref={refCallback} sx={{flex: 1, overflowY: 'scroll'}}>{ViewToRender(view)}</Box>

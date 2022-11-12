@@ -1,13 +1,16 @@
 import 'reflect-metadata'
 import { inject, injectable } from 'inversify';
 import { read, WorkBook, WorkSheet, set_cptable } from 'xlsx'
-const cptable = require('xlsx/dist/cpexcel');
 import { IExcelProcessor } from './excelProcessor.types';
 import { ILogger } from '../../logger/types';
 import moment from 'moment';
 import { IFileManager } from '../../fs/fileManager.types';
 import { LOGIC_TYPES } from '../../types';
 
+// When running in the browser, we need to load the codepages manually (didn't investigate why)
+// using require to avoid the need to define types. we just pass it to the 'set_cptable' and don't do anything else
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const cptable = require('xlsx/dist/cpexcel');
 set_cptable(cptable);
 
 @injectable()
@@ -96,21 +99,21 @@ export class ExcelProcessor implements IExcelProcessor {
 
     loadFile = async (path: string): Promise<WorkBook> => {
         let workbook
-        console.log('loading file ' + path)
+        this.logger.log('loading file ' + path)
         try {
             const data = await this.fileMgr.readUploadedFile(path)
             workbook = read(data, { raw: true })
         } catch (err) {
-            console.log('Failed loading file', err)
+            this.logger.log('Failed loading file', err)
             throw err
         }
 
-        console.log('file loaded' + path)
+        this.logger.log('file loaded' + path)
         return workbook
     }
 
     loadFiles = async (files: { name: string }[]): Promise<WorkBook[]> => {
-        console.log('files', files)
+        this.logger.log('files', files)
         //listing all files using forEach
         const xlsx = files.filter((file) => file.name.endsWith('.xlsx') || file.name.endsWith('.xls'));
         return Promise.all(xlsx.map((file) => this.loadFile(file.name)))

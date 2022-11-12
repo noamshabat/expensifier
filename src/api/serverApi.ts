@@ -1,8 +1,8 @@
 import _env from "../_env";
-import { AddFilesResponse, APIEndpoints, Facets, FiltersDesc, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping, Methods } from '../shared.types'
+import { AddFilesResponse, APIEndpoints, AppFiles, Facets, FiltersDesc, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping, Methods } from '../shared.types'
 
 export class ServerApi implements IAPI {
-    // automatically call the toString() method on all properties of an object.
+	// automatically call the toString() method on all properties of an object.
     private stringifyParams(params: { [key: string]: unknown }) {
         return Object.entries(params).reduce((stringifiedParams, [k, v]) => {
             stringifiedParams[k as keyof typeof stringifiedParams] = JSON.stringify(v)
@@ -58,4 +58,11 @@ export class ServerApi implements IAPI {
         })
         return res.json() as Promise<AddFilesResponse>
     }
+
+	async getConfigFile (p: { file: AppFiles; }) {
+		return Promise.resolve(p)
+	}
+	async setConfigFile (p: { file: AppFiles; }) {
+		return Promise.resolve()
+	}
 }

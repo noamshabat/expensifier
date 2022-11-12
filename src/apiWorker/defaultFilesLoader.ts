@@ -1,9 +1,10 @@
 import 'reflect-metadata';
 import { LOGIC_TYPES } from "expensifier-logic";
-import { AppFiles, IFileManager } from "expensifier-logic/fs/fileManager.types";
+import { IFileManager } from "expensifier-logic/fs/fileManager.types";
 import { inject, injectable } from "inversify";
 import { defaultFiles } from "./defaultFiles";
 import { IDefaultFileLoader } from './fileMgr.types'
+import { AppFiles } from 'expensifier-logic/dist/shared.types';
 
 export const DefaultFilesSymbol = Symbol.for("DefaultFilesLoader")
 

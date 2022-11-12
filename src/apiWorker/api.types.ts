@@ -1,5 +1,9 @@
 import { AddFilesResponse, APIs, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI } from "../shared.types"
 
+export type ApiMessageBase = {
+    type: APIs
+}
+
 type GetTransactionMessage = {
     type: APIs.GetTransactions,
     args: Parameters<IAPI[APIs.GetTransactions]>[0]
@@ -25,9 +29,19 @@ type AddFilesMessage = {
     args: Parameters<IAPI[APIs.AddFiles]>[0]
 }
 
+type GetConfigFileMessage = {
+	type: APIs.GetConfigFile
+	args: Parameters<IAPI[APIs.GetConfigFile]>[0]
+}
+
+type SetConfigFileMessage = {
+	type: APIs.SetConfigFile
+	args: Parameters<IAPI[APIs.SetConfigFile]>[0]
+}
+
 export const API_WORKER_MESSAGE_IDENTIFIER = 'API-Worker'
 export type ApiMessage = { source?: typeof API_WORKER_MESSAGE_IDENTIFIER } &
-    (AddFilesMessage | AddMappingMessage | GetFacetsMessage | GetMappingsMessage | GetTransactionMessage)
+    (AddFilesMessage | AddMappingMessage | GetFacetsMessage | GetMappingsMessage | GetTransactionMessage | GetConfigFileMessage | SetConfigFileMessage)
 
 type GetTransactionMessageResponse = {
     type: APIs.GetTransactions
@@ -59,6 +73,18 @@ type AddFilesMessageResponse = {
     data: AddFilesResponse
 }
 
+type GetConfigFileMessageResponse = {
+	type: APIs.GetConfigFile
+	id: string
+	data: object
+}
+
+type SetConfigFileMessageResponse = {
+	type: APIs.SetConfigFile
+	id: string
+	data: void
+}
+
 type ErrorMessageResponse = {
     type: APIs,
     id: string,
@@ -71,4 +97,6 @@ export type ApiMessageResponse =
     GetFacetsMessageResponse |
     AddMappingMessageResponse |
     AddFilesMessageResponse |
-    ErrorMessageResponse
+	GetConfigFileMessageResponse |
+	SetConfigFileMessageResponse |
+    ErrorMessageResponse 

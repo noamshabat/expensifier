@@ -23,7 +23,8 @@
     "jsx": "react-jsx",
     "outDir": "dist",
     "baseUrl": "./",
-    "paths": {"expensifier-logic": ["./logic"]}
+    "paths": {"expensifier-logic": ["./logic"]},
+    "noUnusedLocals": true
   },
   "include": [
     "src"

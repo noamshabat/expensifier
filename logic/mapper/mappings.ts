@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 import { inject, injectable } from 'inversify'
 import { IMapper } from "./types"
-import { Mapping, RawTransaction, UNDEFINED_CATEGORY } from '../shared.types'
-import { AppFiles, IFileManager } from '../fs/fileManager.types'
+import { AppFiles, Mapping, RawTransaction, UNDEFINED_CATEGORY } from '../shared.types'
+import { IFileManager } from '../fs/fileManager.types'
 import { LOGIC_TYPES } from '../types'
 
 @injectable()
