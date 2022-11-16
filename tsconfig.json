@@ -24,7 +24,7 @@
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {"expensifier-logic": ["./logic"]},
-    "noUnusedLocals": true
+    // "noUnusedLocals": true
   },
   "include": [
     "src"

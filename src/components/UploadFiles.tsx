@@ -15,6 +15,7 @@ function _UploadFiles() {
     return <Button
         variant="contained"
         component="label"
+		size="small"
     >
         Upload File
         <input

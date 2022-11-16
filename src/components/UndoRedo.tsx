@@ -62,10 +62,10 @@ export function UndoRedo(p: { view: Views, setView: (v: Views) => void }) {
         setFilters(newFilters)
     }
     const undo = () => { if (index > 0) setHistoryItem(index - 1) }
-    const redo = () => { if (index < history.length - 1) setHistoryItem(index + 1) }
+    const _redo = () => { if (index < history.length - 1) setHistoryItem(index + 1) }
 
     return <Stack direction="row" gap="8px">
-        <Button variant="contained" onClick={undo}>Undo</Button>
-        <Button variant="contained" onClick={redo}>Redo</Button>
+        <Button variant="contained" onClick={undo} size="small">Back</Button>
+        {/* <Button variant="contained" onClick={redo}>Redo</Button> */}
     </Stack>
 }

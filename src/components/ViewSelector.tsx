@@ -12,6 +12,7 @@ export function ViewSelector({ setView, view }: { view: Views, setView: (view: V
           value={view}
           label="View"
           onChange={(e) => setView(e.target.value as Views)}
+		  size="small"
         >
           <MenuItem value={Views.List}>{Views.List}</MenuItem>
           <MenuItem value={Views.Bar}>{Views.Bar}</MenuItem>
