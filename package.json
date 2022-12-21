@@ -39,7 +39,8 @@
     "build-server": "tsc -b ./server/tsconfig.json",
     "start": "webpack watch",
     "build": "webpack",
-    "test": "echo 'not implemented'"
+    "test": "echo 'not implemented'",
+	"lint-fix": "eslint --fix ./src/**"
   },
   "eslintConfig": {
     "extends": [

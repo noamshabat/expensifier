@@ -1,5 +1,5 @@
 
 export interface IWebServer {
-    init: () => void
-    stop: () => Promise<void>
+	init: () => void
+	stop: () => Promise<void>
 }

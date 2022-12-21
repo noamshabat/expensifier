@@ -96,7 +96,7 @@ export class WebServer implements IWebServer {
 			}
 			this.logger.log('Uploading files')
 			const files = await this.fileMgr.readdir(UPLOAD_FOLDER)
-        
+		
 			// chose to use 'unknown' as FileList to allow using the same API type on client and server.
 			await this.integration.addFiles({ files: files.map((f) => ({ name: `${f}` }))})
 			

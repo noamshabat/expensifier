@@ -15,7 +15,7 @@ const envType: { [key in EnvVar]: string} = {
 @injectable()
 export class Environment implements IEnvironment {
 	private _logger
-    private _env: typeof envType = process.env as typeof envType
+	private _env: typeof envType = process.env as typeof envType
 
 	constructor(
 		@inject(LOGIC_TYPES.ILogger) logger: ILogger,
@@ -32,7 +32,7 @@ export class Environment implements IEnvironment {
 		})
 	}
 
-    get(key: EnvVar) {
-        return this._env[key]
-    }
+	get(key: EnvVar) {
+		return this._env[key]
+	}
 }

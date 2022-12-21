@@ -8,9 +8,9 @@ import { Filterable } from '../types';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@mui/material/CircularProgress';
-import { InputBaseProps } from "@mui/material"
+import { InputBaseProps } from '@mui/material'
 
 
 const ITEM_HEIGHT = 48;
@@ -31,15 +31,15 @@ const useStyles = makeStyles((theme) => ({
 		width: 300
 	},
 	indeterminateColor: {
-		color: "#f50057"
+		color: '#f50057'
 	},
 	selectAllText: {
 		fontWeight: 500
 	},
 	selectedAll: {
-		backgroundColor: "rgba(0, 0, 0, 0.08)",
-		"&:hover": {
-			backgroundColor: "rgba(0, 0, 0, 0.08)"
+		backgroundColor: 'rgba(0, 0, 0, 0.08)',
+		'&:hover': {
+			backgroundColor: 'rgba(0, 0, 0, 0.08)'
 		}
 	}
 }));
@@ -50,7 +50,7 @@ type FilterProps<T> = {
 	setFilter: (newFilters: T[]) => void
 	names: T[]
 	loading: boolean
-	color?: InputBaseProps["color"]
+	color?: InputBaseProps['color']
 }
 
 export function GenericFilter<T extends Filterable>(props: FilterProps<T>) {
@@ -60,7 +60,7 @@ export function GenericFilter<T extends Filterable>(props: FilterProps<T>) {
 
 	const handleChange = (event: SelectChangeEvent<Filterable[]>) => {
 		const value = event.target.value;
-		if (value[value.length - 1] === "all") {
+		if (value[value.length - 1] === 'all') {
 			props.setFilter(props.filtered.length === props.names.length ? [] : props.names);
 			return
 		}
@@ -94,7 +94,7 @@ export function GenericFilter<T extends Filterable>(props: FilterProps<T>) {
 					dense={true}
 					value="all"
 					classes={{
-						root: isAllSelected ? classes.selectedAll : ""
+						root: isAllSelected ? classes.selectedAll : ''
 					}}
 				>
 					<ListItemIcon>

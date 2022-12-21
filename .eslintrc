@@ -20,6 +20,8 @@
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_"
       }
-    ]
+    ],
+	"quotes": ["warn", "single"],
+	"indent": ["warn", "tab"]
   }
 }

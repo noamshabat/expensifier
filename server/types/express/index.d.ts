@@ -1,5 +1,5 @@
 declare namespace Express {
-    interface Request {
-        files?: FileList;
-    }
+	interface Request {
+		files?: FileList;
+	}
 }

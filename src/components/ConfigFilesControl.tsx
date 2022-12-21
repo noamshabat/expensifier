@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import PopupStateComp, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { PopupState } from 'material-ui-popup-state/core';
 import API from '../api'
-import { AppFiles } from "expensifier-logic/shared.types";
+import { AppFiles } from 'expensifier-logic/shared.types';
 
 export function ExportFiles() {
 	return (
@@ -66,7 +66,7 @@ async function exportFile(file: AppFiles, popupState: PopupState) {
 	const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
 		JSON.stringify(data, null, '\t')
 	)}`;
-	const link = document.createElement("a");
+	const link = document.createElement('a');
 	link.href = jsonString;
 	link.download = file;
 

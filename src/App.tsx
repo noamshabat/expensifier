@@ -21,8 +21,8 @@ function App() {
 
 	const ViewToRender = (view: Views) => {
 		switch (view) {
-			case Views.List: return <TransactionList parent={viewBoxNode} />
-			case Views.Bar: return <BarChart setView={setView} />
+		case Views.List: return <TransactionList parent={viewBoxNode} />
+		case Views.Bar: return <BarChart setView={setView} />
 		}
 	}
 

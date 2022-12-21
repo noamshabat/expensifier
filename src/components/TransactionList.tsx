@@ -11,8 +11,8 @@ import Paper from '@mui/material/Paper';
 import { useTransactions } from '../hooks/useTransactions';
 import { Chip, Stack } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress'
-import { Transaction, UNDEFINED_CATEGORY } from "expensifier-logic/shared.types";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { Transaction, UNDEFINED_CATEGORY } from 'expensifier-logic/shared.types';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { SetCategoryDialog } from './SetCategoryDialog';
 import moment from 'moment';
 import { useNotifyUpdate } from '../context/RefetchContext';

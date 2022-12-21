@@ -7,17 +7,17 @@ import { UpdateContext } from './context/RefetchContext';
 import { WorkerApi } from './api/workerApi';
 
 async function start() {
-  render(
-    <React.StrictMode>
-      <UpdateContext>
-        <FiltersContext>
-          <MappingContext>
-            <App />
-          </MappingContext>
-        </FiltersContext>
-      </UpdateContext>
-    </React.StrictMode>
-    , document.getElementById('root') as HTMLElement);
+	render(
+		<React.StrictMode>
+			<UpdateContext>
+				<FiltersContext>
+					<MappingContext>
+						<App />
+					</MappingContext>
+				</FiltersContext>
+			</UpdateContext>
+		</React.StrictMode>
+		, document.getElementById('root') as HTMLElement);
 }
 start()
 

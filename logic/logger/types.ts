@@ -1,3 +1,3 @@
 export interface ILogger {
-    log: (...args: unknown[]) => void
+	log: (...args: unknown[]) => void
 }

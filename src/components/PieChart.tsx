@@ -14,9 +14,9 @@ export {}
 //   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
 //   return (
-//     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-//       {`${(percent * 100).toFixed(0)}%`}
-//     </text>
+//	 <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+//	   {`${(percent * 100).toFixed(0)}%`}
+//	 </text>
 //   );
 // };
 
@@ -24,30 +24,30 @@ export {}
 //   const { transactions, filteredCategories } = useAppContext()
 
 //   const data = filteredCategories.reduce<{ name: string, value: number }[]>((agg, cat) => {
-//     const catTransactions = transactions.filter((t) => t.category === cat && t.type === TransactionType.Expense)
-//     const value = catTransactions.reduce((agg, t) => agg - t.amount, 0)
-//     return [...agg, { name: cat, value }]
+//	 const catTransactions = transactions.filter((t) => t.category === cat && t.type === TransactionType.Expense)
+//	 const value = catTransactions.reduce((agg, t) => agg - t.amount, 0)
+//	 return [...agg, { name: cat, value }]
 //   }, [])
 
 //   return (
-//     <Paper>
-//         <RePieChart width={400} height={400}>
-//           <Pie
-//             data={data}
-//             cx="50%"
-//             cy="50%"
-//             labelLine={true}
-//             label={renderCustomizedLabel}
-//             outerRadius={80}
-//             fill="#8884d8"
-//             dataKey="value"
-//           >
-//             {data.map((_, index) => (
-//               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-//             ))}
-//           </Pie>
-//           <Tooltip />
-//         </RePieChart>
-//     </Paper>
+//	 <Paper>
+//		 <RePieChart width={400} height={400}>
+//		   <Pie
+//			 data={data}
+//			 cx="50%"
+//			 cy="50%"
+//			 labelLine={true}
+//			 label={renderCustomizedLabel}
+//			 outerRadius={80}
+//			 fill="#8884d8"
+//			 dataKey="value"
+//		   >
+//			 {data.map((_, index) => (
+//			   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+//			 ))}
+//		   </Pie>
+//		   <Tooltip />
+//		 </RePieChart>
+//	 </Paper>
 //   );
 // }
