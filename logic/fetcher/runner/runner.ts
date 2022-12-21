@@ -50,7 +50,7 @@ export class Runner implements IRunner {
                 origin: guide.name,
                 accountType: guide.accountType,
                 timestamp: timestamp.valueOf(),
-                month: (timestamp.month() + 1).toString(),
+                month: `${timestamp.year()}-${(timestamp.month() + 1).toString().padStart(2, '0')}`,
                 type: TransactionType.Expense, // TODO
             }
 
