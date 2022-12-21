@@ -9,12 +9,12 @@ import { TYPES } from '../types'
 import { FiltersDesc } from '../../logic/store/store.types'
 import { ILogger } from '../../logic/logger/types'
 import { EnvVar, IEnvironment } from '../environment/environment.types'
-import { APIEndpoints, IAPI, Mapping } from '../shared.types'
 import { InvalidRequestException } from '../exceptions/InvalidRequestException'
 import multer from 'multer'
 import path from 'path'
 import { LOGIC_TYPES } from '../../logic/types'
 import { IFileManager } from '../../logic/fs/fileManager.types'
+import { APIEndpoints, IAPI, Mapping } from 'expensifier-logic/shared.types'
 
 const UPLOAD_FOLDER = process.env.UPLOAD_FOLDER as string
 
@@ -98,7 +98,7 @@ export class WebServer implements IWebServer {
 			const files = await this.fileMgr.readdir(UPLOAD_FOLDER)
         
 			// chose to use 'unknown' as FileList to allow using the same API type on client and server.
-			await this.integration.addFiles({ files: files.map((f) => ({ name: `${f}` })) as unknown as FileList})
+			await this.integration.addFiles({ files: files.map((f) => ({ name: `${f}` }))})
 			
 			// clear upload folder after upload
 			await this.fileMgr.clearFolder(UPLOAD_FOLDER)

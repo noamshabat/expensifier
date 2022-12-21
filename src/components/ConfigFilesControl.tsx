@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import PopupStateComp, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { PopupState } from 'material-ui-popup-state/core';
 import API from '../api'
-import { AppFiles } from '../shared.types';
+import { AppFiles } from "expensifier-logic/shared.types";
 
 export function ExportFiles() {
 	return (

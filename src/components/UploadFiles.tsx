@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { UploadedFiles } from "expensifier-logic/shared.types";
 import { ChangeEvent, memo } from "react";
 import API from "../api/";
 import { useNotifyUpdate } from "../context/RefetchContext";
@@ -8,7 +9,7 @@ function _UploadFiles() {
     
     const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
-            API.addFiles({ files: event.target.files }).then(notifyUpdateRequired).catch(console.error)
+            API.addFiles({ files: event.target.files as unknown as UploadedFiles }).then(notifyUpdateRequired).catch(console.error)
         }
     };
 

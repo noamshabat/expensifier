@@ -39,8 +39,7 @@
     "build-server": "tsc -b ./server/tsconfig.json",
     "start": "webpack watch",
     "build": "webpack",
-    "test": "echo 'not implemented'",
-    "copy-shared": "nodemon -w ./shared/types.ts --exec ./copy-shared"
+    "test": "echo 'not implemented'"
   },
   "eslintConfig": {
     "extends": [

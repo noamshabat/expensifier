@@ -1,6 +1,6 @@
 import { LOGIC_TYPES } from "expensifier-logic/types";
 import { Container } from "inversify";
-import { APIs, IAPI } from "../shared.types";
+import { APIs, IAPI } from "expensifier-logic/shared.types";
 import { ApiMessage, ApiMessageResponse, API_WORKER_MESSAGE_IDENTIFIER } from "./api.types";
 import { setupContainer } from "./ioc";
 

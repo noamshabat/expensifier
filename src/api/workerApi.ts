@@ -1,7 +1,7 @@
 // import ApiWorker from 'worker-loader!../apiWorker/apiEntry.worker';
 import ApiWorker from '../apiWorker/fakeWorker';
 import { ApiMessage, ApiMessageResponse, API_WORKER_MESSAGE_IDENTIFIER } from '../apiWorker/api.types';
-import { AddFilesResponse, APIs, AppFiles, FiltersDesc, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping } from '../shared.types';
+import { AddFilesResponse, APIs, AppFiles, FiltersDesc, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping, UploadedFiles } from "expensifier-logic/shared.types";
 import { v4 as uuid} from 'uuid'
 import { CreatesWritable } from '../apiWorker/fileMgr.types';
 
@@ -54,11 +54,11 @@ export class WorkerApi implements IAPI {
     getMappings = async () => this.postMessage({type: APIs.GetMappings, args: undefined }) as Promise<GetMappingsResponse>
     getFacets = async (p: { filters: FiltersDesc }) => this.postMessage({type: APIs.GetFacets, args: p }) as Promise<GetFacetsResponse>
     addMapping = async (p: { mapping: Mapping, categoryIndex: number }) => this.postMessage({type: APIs.AddMapping, args: p }) as Promise<void>
-    addFiles = async (p: { files: FileList }) => {
+    addFiles = async (p: { files: UploadedFiles }) => {
         const root = await navigator.storage.getDirectory()
         const uploads = await root.getDirectoryHandle('uploads', { create: true })
         const apiFiles = []
-        for ( const file of p.files ) {
+        for ( const file of p.files as unknown as FileList) {
             // TODO: check if the file exists first - we don't want to override previous input.
             const fileH = await uploads.getFileHandle(file.name, { create: true }) as unknown as CreatesWritable
             const writable = await fileH.createWritable();
@@ -66,7 +66,7 @@ export class WorkerApi implements IAPI {
             await writable.close()
             apiFiles.push({ name: file.name})
         }
-        return this.postMessage({type: APIs.AddFiles, args: {files: apiFiles as unknown as FileList} }) as Promise<AddFilesResponse>
+        return this.postMessage({type: APIs.AddFiles, args: {files: apiFiles} }) as Promise<AddFilesResponse>
     }
 
 	getConfigFile  = async (p: { file: AppFiles; }) => this.postMessage({ type: APIs.GetConfigFile, args: p}) as Promise<object>

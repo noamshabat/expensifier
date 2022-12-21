@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { inject, injectable } from "inversify";
-import { ALL_FACETS, AppFiles, FiltersDesc, IAPI, Mapping } from "../shared.types";
+import { ALL_FACETS, AppFiles, FiltersDesc, IAPI, Mapping, UploadedFiles } from "../shared.types";
 import { IStore } from "../store/store.types";
 import { IRunner } from '../fetcher/runner/types';
 import { IMapper } from '../mapper/types';
@@ -47,8 +47,8 @@ export class Integration implements IAPI {
         return Promise.resolve()
     }
 
-    async addFiles(p: { files: FileList }) {
-        await this.runner.run(Array.from(p.files) as unknown as { name: string }[])
+    async addFiles(p: { files: UploadedFiles }) {
+        await this.runner.run(p.files)
 		return Promise.resolve({ processed: 0 }) 
     }
 

@@ -4,6 +4,6 @@ export const enum EnvVar {
 }
 
 export interface IEnvironment {
-    init: VoidFunction,
+    init: () => void,
     get: (name: EnvVar) => string
 }

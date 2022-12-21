@@ -3,7 +3,7 @@ import { isEqual } from "underscore"
 import { useEffect, useState } from "react";
 import { useFilters } from "../context/FiltersContext";
 import { Views } from "../types";
-import { FiltersDesc } from "../shared.types";
+import { FiltersDesc } from "expensifier-logic/shared.types";
 
 // we don't want to immediately add an undo call after something changes since sometimes several things change at the same time in succession.
 // wait a bit so that we can get a full state.

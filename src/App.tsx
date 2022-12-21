@@ -7,9 +7,9 @@ import { UndoRedo } from './components/UndoRedo';
 import { Stack, Box, FormLabel, Divider } from '@mui/material';
 import { ViewSelector } from './components/ViewSelector';
 import { log } from './utils';
-import { ALL_FACETS } from './shared.types';
 import { UploadFiles } from './components/UploadFiles';
 import { ExportFiles, ImportFiles } from './components/ConfigFilesControl';
+import { ALL_FACETS } from 'expensifier-logic/shared.types';
 
 function App() {
 	const [view, setView] = useState<Views>(Views.List)

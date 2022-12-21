@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from "react"
-import { FiltersDesc } from "../shared.types"
+import { FiltersDesc } from "expensifier-logic/shared.types";
 
 type FiltersContext = {
     filters: FiltersDesc

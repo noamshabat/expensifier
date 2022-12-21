@@ -1,8 +1,8 @@
+import { Transaction, GetTransactionsResponse } from "expensifier-logic/shared.types"
 import { useEffect, useState } from "react"
 import API from "../api/"
 import { useFilters } from "../context/FiltersContext"
 import { useMappings } from "../context/MappingsContext"
-import { Transaction, GetTransactionsResponse } from "../shared.types"
 
 export function useTransactions(batchSize?: number) {
     const { mappings } = useMappings()

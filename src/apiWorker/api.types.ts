@@ -1,4 +1,4 @@
-import { AddFilesResponse, APIs, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI } from "../shared.types"
+import { AddFilesResponse, APIs, GetFacetsResponse, GetMappingsResponse, GetTransactionsResponse, IAPI } from "expensifier-logic/shared.types";
 
 export type ApiMessageBase = {
     type: APIs

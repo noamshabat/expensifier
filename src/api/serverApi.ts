@@ -1,5 +1,5 @@
 import _env from "../_env";
-import { AddFilesResponse, APIEndpoints, AppFiles, Facets, FiltersDesc, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping, Methods } from '../shared.types'
+import { AddFilesResponse, APIEndpoints, AppFiles, Facets, FiltersDesc, GetMappingsResponse, GetTransactionsResponse, IAPI, Mapping, Methods, UploadedFiles } from "expensifier-logic/shared.types";
 
 export class ServerApi implements IAPI {
 	// automatically call the toString() method on all properties of an object.
@@ -41,11 +41,11 @@ export class ServerApi implements IAPI {
         return response.json() as Promise<Facets>
     }
 
-    async addFiles(p: { files: FileList }) {
+    async addFiles(p: { files: UploadedFiles }) {
         // Create an object of formData 
         const formData = new FormData();
 
-        for (const file of p.files) {
+        for (const file of p.files as unknown as FileList) {
             formData.append(
                 'files',
                 file,

@@ -1,4 +1,4 @@
-import { IAPI } from "../shared.types";
+import { IAPI } from "expensifier-logic/shared.types";
 import { ServerApi } from "./serverApi";
 import { WorkerApi } from "./workerApi";
 

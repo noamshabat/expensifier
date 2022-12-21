@@ -6,7 +6,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField, { BaseTextFieldProps } from "@mui/material/TextField";
-import { CategoryKeys, Transaction, UNDEFINED_CATEGORY } from "../shared.types";
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import Stack from "@mui/material/Stack";
@@ -16,6 +15,7 @@ import Box from "@mui/material/Box";
 import { useFacets } from "../hooks/useFacets";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useMappings } from "../context/MappingsContext";
+import { Transaction, CategoryKeys, UNDEFINED_CATEGORY } from "expensifier-logic/shared.types";
 
 export function SetCategoryDialog(p: { transaction: Transaction }) {
     const [open, setOpen] = useState(false);

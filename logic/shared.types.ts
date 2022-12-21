@@ -1,4 +1,3 @@
-// DO NOT EDIT! - THIS FILE IS AUTO-GENERATED (COPIED) FROM {project-root}/shared/types.ts
 
 export enum AppFiles {
     DataColumnOptions='baseDataColumnOptions.json',
@@ -87,12 +86,14 @@ export type GetMappingsResponse = Mapping[][]
 export type GetFacetsResponse = Facets
 export type AddFilesResponse = { processed: number }
 
+export type UploadedFiles = { name: string }[]
+
 export interface IAPI {
     [APIs.GetTransactions]: (p: {filters: FiltersDesc, from?: number, to?: number}) => Promise<GetTransactionsResponse>
     [APIs.GetMappings]: () => Promise<GetMappingsResponse>
     [APIs.GetFacets]: (p:{filters: FiltersDesc}) => Promise<GetFacetsResponse>
     [APIs.AddMapping]: (p:{mapping: Mapping, categoryIndex: number}) => Promise<void>
-    [APIs.AddFiles]: (p:{files: FileList}) => Promise<AddFilesResponse>
+    [APIs.AddFiles]: (p:{files: UploadedFiles}) => Promise<AddFilesResponse>
 	[APIs.GetConfigFile]: (p:{file: AppFiles}) => Promise<object>
 	[APIs.SetConfigFile]: (p:{file: AppFiles, data: unknown}) => Promise<void>
 }

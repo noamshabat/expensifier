@@ -2,9 +2,10 @@ import 'reflect-metadata'
 import { unlink, readdir, readFile, writeFile, access } from "fs/promises";
 import { inject, injectable } from "inversify";
 import { join } from "path";
-import { AppFiles, IFileManager } from "../logic/fs/fileManager.types";
+import { IFileManager } from "../logic/fs/fileManager.types";
 import { EnvVar, IEnvironment } from './environment/environment.types';
 import { TYPES } from './types';
+import { AppFiles } from 'expensifier-logic/shared.types';
 
 @injectable()
 export class FileManager implements IFileManager {

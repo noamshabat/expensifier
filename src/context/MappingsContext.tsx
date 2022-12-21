@@ -1,6 +1,6 @@
+import { CategoryKeys, Mapping } from "expensifier-logic/shared.types"
 import { useMemo, createContext, useState, useContext, useEffect } from "react"
 import API from "../api/"
-import { CategoryKeys, Mapping } from "../shared.types"
 
 type MappingContext = { 
     mappings: { category: Mapping[], category2: Mapping[], category3: Mapping[], category4: Mapping[] },

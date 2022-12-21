@@ -2,7 +2,7 @@ import Stack from "@mui/material/Stack"
 import { Facets, useFacets } from "../hooks/useFacets"
 import { useFilters } from "../context/FiltersContext"
 import { Filterable } from "../types"
-import { Transaction } from '../shared.types'
+import { Transaction } from "expensifier-logic/shared.types";
 import { GenericFilter } from "./GenericFilter"
 import { Box, InputBaseProps, TextField } from "@mui/material"
 

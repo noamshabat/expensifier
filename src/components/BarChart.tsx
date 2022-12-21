@@ -2,7 +2,7 @@ import { useTransactions } from "../hooks/useTransactions";
 import Paper from '@mui/material/Paper';
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, BarChart as ReBarChart } from "recharts";
 import { Views } from "../types";
-import { ALL_CATEGORIES, CategoryKeys, TransactionType } from '../shared.types'
+import { ALL_CATEGORIES, CategoryKeys, TransactionType } from "expensifier-logic/shared.types";
 import Box from "@mui/material/Box";
 import { useRef, useState } from "react";
 import { useFacets } from "../hooks/useFacets";
